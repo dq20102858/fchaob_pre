@@ -1,0 +1,54 @@
+#design_wapper .main_header {
+		background-color: #f0f2f5;
+		line-height: 81px;
+		height: 81px !important;
+		text-align: center;
+
+	}
+
+#design_wapper	.main_contain {
+		background-color: #f0f2f5;
+		color: #333;
+		height: calc(100vh - 81px);
+	}
+
+	#sys_pro .el-card{
+		border: 0px;
+	}
+	#main_pic,#sys_pro,#design {
+		background-color: #fff;
+		width: 90%;
+		min-width: 1128px;
+		margin: 0 auto 24px auto;
+	}
+
+#design_wapper	.image {
+		width: 100%;
+	}
+
+	#design h3,#sys_pro h3 {
+		border-bottom: 1px solid #e8e8ef;
+		padding: 20px 24px;
+	}
+
+	.el-col {
+		width: 25%;
+		padding: 32px 12px 12px 12px;
+		cursor: pointer;
+		text-align: center;
+	}
+
+#design_wapper	.design_col {
+		width: calc(25% - 27px);
+		margin: 24px 24px 0px 0px;
+		padding: 0;
+	}
+
+#design_wapper	.sys_font {
+		padding: 12px;
+	}
+
+#design_wapper	.design_font {
+		padding: 0px 12px 12px 12px;
+		margin-top: -15px
+	}
