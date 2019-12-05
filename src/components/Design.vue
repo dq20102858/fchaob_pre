@@ -22,11 +22,11 @@
 			<el-main id="design">
 				<h3>设计模板</h3>
 				<el-row>
-					<el-col v-for="(o, index) in 6" :key="o" class="design_col">
-						<el-card shadow="hover" @click.native="goProduct(index)">
-						<img src="../../static/imgs/22919452383750790.jpg" class="image">
+					<el-col v-for="(item, key) in this.templates" class="design_col" :key="key">
+						<el-card shadow="hover" @click.native="goProduct(item.id)">
+						<img  v-bind:src="item.img"class="image">
 						<div class="design_font">
-							<span>好吃的汉堡</span>
+							<span>{{item.title}}</span>
 						</div>
 						</el-card>
 					</el-col>
@@ -39,12 +39,16 @@
 </template>
 
 <script>
+	import { getTempleteListsApi } from '@/api/design'
 	export default {
 		name: 'design',
 		data() {
 			return {
-				
+				templates:[]
 			}		
+		},
+		created: function(){
+				this.getTempleteList()
 		},
 		methods:{
 			goProduct(id){
@@ -52,6 +56,18 @@
 			},
 			goDescribe(){
 				
+			},
+			getTempleteList(){
+				getTempleteListsApi().then(response => {
+				    var data = response.data.data
+				    if(data){		        		        	
+				    	this.templates =data
+				    }else{
+				    	alert(response.data.msg)
+				    }
+				}).catch(err => {
+					console.log(err)
+				})
 			}
 		}
 	}
