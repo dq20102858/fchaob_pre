@@ -24,7 +24,7 @@
 				<el-row>
 					<el-col v-for="(item, key) in this.templates" class="design_col" :key="key">
 						<el-card shadow="hover" @click.native="goProduct(item.id)">
-						<img  v-bind:src="item.img"class="image">
+						<img  v-bind:src="item.img" class="image">
 						<div class="design_font">
 							<span>{{item.title}}</span>
 						</div>

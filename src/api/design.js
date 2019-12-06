@@ -6,3 +6,29 @@ export function getTempleteListsApi() {
     method: 'get',
   })
 }
+
+export function getProductCate() {
+  return request({
+    url: 'design/getProductCate',
+    method: 'get',
+  })
+}
+
+export function getTemplateDetail() {
+  return request({
+    url: 'design/getNxTemplateDetail',
+    method: 'get',
+  })
+}
+export function getPageProduct4Select() {
+  return request({
+    url: 'design/getPageProduct4Select',
+    method: 'get',
+  })
+}
+
+
+
+
+
+

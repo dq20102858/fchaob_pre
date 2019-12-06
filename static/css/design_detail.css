@@ -529,23 +529,50 @@
 	list-style: none;
 	width: 100%;
 	float: left;
+	
 }
-
-#inner_wapper ul li {
+#inner_wapper .pro_url{
+	border: 1px solid #e8e8ef;
+}
+.ul_header li, .pro_url li,.room_detail li {
 	float: left;
 	text-align: center;
 }
 
 #inner_wapper .d_type {
-	width: 152px;
+	width: 150px;
 }
 
+#inner_wapper .pro_left{
+	text-align: center;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	display: inline-block;	
+	border-right: 1px solid #e8e8ef
+}
+#inner_wapper .pro_left_name{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #18181c;
+	font-size: 14px;
+}
+#inner_wapper .pro_right{
+	width: calc(100% - 152px);
+	display: inline-block;
+	margin-left: 152px;
+	
+}
 #inner_wapper ul .control_width {
 	width: calc(100% - 152px);
 	height: 130px;
 	margin-left: 152px;
 }
-
+.pro_url{
+	position: relative;
+}
 
 #inner_wapper .d_p {
 	width: 35%;
@@ -561,31 +588,46 @@
 	width: 10%;
 }
 
-#ul_header {
+.ul_header {
 	background: #f7f8fa;
 	height: 52px;
 	margin-bottom: 24px
 }
 
-#ul_header li {
+.ul_header li {
 	line-height: 52px;
 	color: #9092a5;
 	font-size: 14px;
 }
 
 .product_detail ul {
-	border: 1px solid #e8e8ef;
+	/* border: 1px solid #e8e8ef; */
 	margin-bottom: -1px;
 }
+.room_detail{
+	border-top: 1px solid #e8e8ef;
+	border-bottom: 1px solid #e8e8ef;
+}
+.r_p{
+	width: 30%;
+	text-align: left  !important;
+	margin-left: 50px;
+}
+.r_n,.r_ep,.r_tp{
+	width: 10%;
+}
 
+.r_r{
+	width: 20%;
+}
+.r_o{
+	width: 10%;
+}
 .product_detail ul li {
 	height: 130px;
 	line-height: 130px;
 }
 
-.product_detail ul .d_type {
-	border-right: 1px solid #e8e8ef;
-}
 
 .product_detail ul .d_p span {
 	display: block;
@@ -894,7 +936,8 @@
     margin-left: 80px;
     margin-right: 80px;
     line-height: 32px;
-    height: 32px
+    height: 32px;
+	display: inherit;
 }
 
 .price_container .other_price .edit li .left .discount span {
@@ -1061,9 +1104,33 @@
     line-height: 32px;
     color: #4c89fb;
 }
+.del_icon{
+	cursor: pointer
+}
 
+.input input{
+	display: block;
+	width: 100%;
+	font-size: 14px;
+	color: #18181c;
+	padding-left: 8px;
+	line-height: 32px;
+	border-radius: 2px;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 1px solid #e8e8ef;
+	outline: none;
+	-webkit-appearance: none;
+	border-radius: 0;
+}
 
-
+.left {
+    float: left;
+}
+.input[data-v-34f1aaae] {
+    display: inline-block;
+    position: relative;
+}
 
 
 
