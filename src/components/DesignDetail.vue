@@ -11,7 +11,8 @@
 		<el-drawer title="新增产品" :visible.sync="drawer" direction="ltr" class="design_drawer" :modal="isModal" size="463px">
 			<div class="demo-drawer__content">
 				<div class="demo-input-size">
-					<el-input placeholder="请输入产品名称/规格/型号/编码" suffix-icon="el-icon-search" v-model="input1"> </el-input>
+					<el-input placeholder="请输入产品名称/规格/型号/编码" suffix-icon="el-icon-search"  v-model="selectKeywords" @input="getPageProduct4Select"> </el-input>
+				
 				</div>
 				<div class="tab_container">
 					<ul class="switch_block">
@@ -23,10 +24,9 @@
 								<p>产品库</p>
 							</a>
 							<ul>
-								<li class="" v-for="(item, key) in this.productLists" :key="key">
+								<li :class="key==index?'active':''"  v-for="(item, key) in this.productLists" :key="key" @click="selecCate(item.id,key)">
 									{{item.name}}
 								</li>
-
 							</ul>
 						</li>
 					</ul>
@@ -173,15 +173,15 @@
 							<div class="other_price">
 								<div class="show" v-show="!isEditOtherPrice">
 									<div class="left">
-										<p class="price_item">
-											服务费：<span>¥{{servicePrice}}</span></p>
-									</div> <a href="javascript:void(0)" class="right" @click="openOtherEdit">调整价格</a>
+										<p class="price_item" v-for="(item,key) in this. servicePriceLists" :key="'other_price_show_'+key" v-if="item.serviceItemPrice != 0">{{item.name}}：<span>¥{{item.serviceItemPrice}}</span></p>
+									</div> 
+									<a href="javascript:void(0)" class="right" @click="openOtherEdit">调整价格</a>
 								</div>
 								<ul class="edit" style="" v-show="isEditOtherPrice">
 									<li v-for="(item,key) in this. servicePriceLists" :key="'other_price_'+key">
 										<div class="left">
 											<div class="input name" style="width: 120px;">
-												<input type="text" placeholder="费用名" v-bind:value="item.name" class="" style="line-height: 32px;">
+												<input type="text" placeholder="费用名"v-model="item.name" class="" style="line-height: 32px;">
 												<p class="error-text" style="display: none;"></p>
 											</div>
 											<div class="discount"><span>按产品总计的</span>
@@ -193,15 +193,17 @@
 											</div>
 											<div class="result">
 												<div class="input" style="width: 120px;display: inline-block">
-													<input type="text" class="" v-bind:value="item.serviceItemPrice"  style="line-height: 32px; text-align: center; padding-left: 0px;">
+													<input type="text" class="" v-model ="item.serviceItemPrice"  style="line-height: 32px; text-align: center; padding-left: 0px;">
 													<p class="error-text" style="display: none;"></p>
-												</div> <a href="javascript:void(0)"><i class="icon el-icon-error"></i></a>
+												</div> <a href="javascript:void(0)" @click="deleteOtherPrice(key)"><i class="icon el-icon-error"></i></a>
 											</div>
 											<div style="clear: both;"></div>
-										</div> <a href="javascript:void(0)" class="right" @click="openOtherEdit">保存</a>
+										</div> 
+										
+										<a href="javascript:void(0)" class="right" @click="openOtherEdit" v-if="key==0">保存</a>
+										
 									</li>
-									<li class="last"><i class="icon icon-tianjia1"></i> <span
-										>新增附加费用</span></li>
+									<li class="last" @click="addOtherPrice"><i class="icon el-icon-plus"></i> <span>新增附加费用</span></li>
 								</ul>
 							</div>
 						</div>
@@ -217,9 +219,10 @@
 									<div class="tips" style="display: none;">请输入正确的手机号</div>
 								</div>
 								<div class="form-item act">
-									<a href="javascript:void(0)" class="btn">
+									<a href="javascript:void(0)" class="btn" @click="openCustomers">
 										选择已有客户
-									</a></div>
+									</a>
+								</div>
 								<div class="form-item col-2"><label class="label">户型</label><input maxlength="10" type="text" placeholder="请输入户型"></div>
 								<div class="form-item col-2"><label class="label">地址</label><input type="text" placeholder="请输入地址" maxlength="60"></div>
 								<div class="form-item col-1"><label class="label">方案设计</label><input type="text" placeholder=""></div>
@@ -229,6 +232,34 @@
 						<div style="clear: both;"></div>
 					</div>
 				</div>
+				<el-dialog title="选择客户" :visible.sync="isShowCustomers">
+					<div class="customer_search">
+						<el-input placeholder="请输入客户名称/手机号" suffix-icon="el-icon-search" v-model="customerKeywords" @input="getCustomersPages4User"> </el-input>
+					</div>
+					<el-table :data="customersPages.data" header-align="center" highlight-current-row>
+						<el-table-column label="" min-width="10%" align="center">
+							<template scope="scope">
+								<el-radio :label="scope.row.id"  v-model="postCustomer.id" @change = "selectionCustomer(scope.$index,scope.row)">&nbsp</el-radio>
+							</template>
+						</el-table-column>
+						<el-table-column type="index" label="序号" min-width="10%" align="center"></el-table-column>
+						<el-table-column property="name" label="客户名称" min-width="40%" align="center"></el-table-column>
+						<el-table-column property="phone" label="联系电话" min-width="40%" align="center"></el-table-column>
+					</el-table>
+				   <template>
+				      <el-pagination  @current-change="handleCurrentChange"
+									  :current-page="customersPages.current_page" 
+									  :page-size="5"
+									  layout="total, prev, pager, next, jumper"
+									  :total="customersPages.total"
+									  small
+									  class="customer_page"></el-pagination>						    
+				  </template>
+				  <div class="customer_btn">
+					  <el-button size="small">取消</el-button>
+					  <el-button type="primary" size="small">确定</el-button>
+				  </div>
+				</el-dialog>
 			</el-main>
 		</el-container>
 		<div class="block">
@@ -249,20 +280,25 @@
 	import {
 		getProductCate,
 		getTemplateDetail,
-		getPageProduct4Select
+		getPageProduct4Select,
+		getCustomersPages
 	} from '@/api/design'
 	export default {
 		name: 'designDetail',
 		data() {
 			return {
-				num: 1,
+				id:this.$route.query.id,
 				drawer: false, //抽屉是否打开
 				isModal: false, //抽屉是否需要遮罩层
 				isEditPrice: false, //是否编辑价格
 				showProduct: true, //是否显示产品页面
 				discountPriceShow: false, //说否展示产品折后价
 				isEditOtherPrice: false, //是否编辑其他价格
-				input1: "",
+				isShowCustomers:false,//是否展示已有客户
+				customerPage:1,//客户列表当前的分页
+				selectPage:1,//
+				cateId:0,
+				index:0,
 				userInfo: {
 					name: ""
 				},
@@ -283,7 +319,13 @@
 						percent:20,
 						serviceItemPrice:0
 					}
-				]
+				],
+				customersPages:[],//已有的客户
+				postCustomer:{
+					id:0
+				},//提交的客户数据
+				customerKeywords:"",
+				selectKeywords:"",
 
 			}
 		},
@@ -291,14 +333,16 @@
 			this.getListCompanyTopProductCatalog();
 			this.getNxTemplateDetail();
 			this.getPageProduct4Select();
+			this.initServicePriceList();
 		},
 		methods: {
 			//计算初始服务费
 			initServicePriceList(){
 				this.servicePrice = 0;
-				var calculateTPrice = this.calculateTPrice;	
+				let calculateTPrice = this.calculateTPrice;	
 				for (let i = 0 ; i<this.servicePriceLists.length;i++) {
-					this.servicePriceLists[i]['serviceItemPrice'] = parseFloat(this.servicePriceLists[i]['percent'] / 100).toFixed(2) * calculateTPrice;
+					let price = parseFloat(this.servicePriceLists[i]['percent'] / 100);
+					this.servicePriceLists[i]['serviceItemPrice'] = price * calculateTPrice;
 					let oneServicePrice = this.servicePriceLists[i]['serviceItemPrice'] ;
 					this.servicePrice +=oneServicePrice;
 				}
@@ -331,7 +375,7 @@
 					if (data) {
 						this.productLists = data
 					} else {
-						alert(response.data.msg)
+						
 					}
 				}).catch(err => {
 					console.log(err)
@@ -351,19 +395,20 @@
 						});
 						this.getCalculateTPrice();
 					} else {
-						alert(response.data.msg)
+						
 					}
 				}).catch(err => {
 					console.log(err)
 				})
 			},
+			
 			getPageProduct4Select() {
-				getPageProduct4Select().then(response => {
+				getPageProduct4Select(this.selectPage,this.cateId,this.selectKeywords).then(response => {
 					var data = response.data.data
 					if (data) {
-						this.selectedLists = data
+						this.selectedLists = data.data
 					} else {
-						alert(response.data.msg)
+						
 					}
 				}).catch(err => {
 					console.log(err)
@@ -436,7 +481,6 @@
 			//打开其他调价
 			openOtherEdit() {
 				this.isEditOtherPrice = !this.isEditOtherPrice;
-				this.initServicePriceList();
 			},
 			checkValue() {
 				//检查输入值
@@ -451,8 +495,56 @@
 				//保存折扣价
 				this.openEdit();
 				this.discountPriceShow = !this.discountPriceShow;
+			},
+			addOtherPrice(){
+				//新增其他费用
+				var oneItem = {
+					name :"",
+					percent:0,
+					serviceItemPrice:0
+				}
+				this.servicePriceLists.push(oneItem);
+				console.log(this.servicePriceLists)
+			},
+			deleteOtherPrice(key){
+				//删除一个其他项价格
+				this.servicePriceLists.splice(key, 1);
+				this.getCalculateTPrice();
+			},
+			openCustomers(){
+				//打开客人已有客户
+				this.isShowCustomers = true;
+				this.getCustomersPages4User();
+			},
+			getCustomersPages4User(){
+				getCustomersPages(this.customerPage,this.customerKeywords).then(response => {
+					var data = response.data.data
+					if (data) {
+						this.customersPages = data;
+						this.customersPages['current_page'] = parseInt(data.current_page) ;
+					} else {
+						
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			handleCurrentChange(val){
+				//翻页
+				this.customerPage = val;
+				this.getCustomersPages4User();
+			},
+			selectionCustomer(index,row){
+				//选中的已有客户
+				this.postCustomer = row;
+				console.log(this.postCustomer)
+				
+			},
+			selecCate(cateId,key){
+				this.cateId = cateId;
+				this.index = key;
+				this.getPageProduct4Select();
 			}
-
 
 		}
 	}
@@ -468,6 +560,9 @@
 
 	#designDetail .el-drawer {
 		position: static !important;
+	}
+	#designDetail .has-gutter .el-table-column--selection .cell {
+	    display: none; 
 	}
 </style>
 <style scoped>

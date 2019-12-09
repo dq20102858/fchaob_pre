@@ -1131,6 +1131,17 @@
     display: inline-block;
     position: relative;
 }
+.customer_page {
+	margin-top: 20px;
+	text-align: right;
+}
+.customer_btn{
+	text-align:right;
+	margin-top: 20px;
+}
+.customer_search{
+	width: 70%;
+}
 
 
 
