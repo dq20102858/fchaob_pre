@@ -11,8 +11,9 @@
 		<el-drawer title="新增产品" :visible.sync="drawer" direction="ltr" class="design_drawer" :modal="isModal" size="463px">
 			<div class="demo-drawer__content">
 				<div class="demo-input-size">
-					<el-input placeholder="请输入产品名称/规格/型号/编码" suffix-icon="el-icon-search"  v-model="selectKeywords" @input="getPageProduct4Select"> </el-input>
-				
+					<el-input placeholder="请输入产品名称/规格/型号/编码" suffix-icon="el-icon-search" v-model="selectKeywords" @input="chageProductInput">
+					</el-input>
+
 				</div>
 				<div class="tab_container">
 					<ul class="switch_block">
@@ -24,13 +25,13 @@
 								<p>产品库</p>
 							</a>
 							<ul>
-								<li :class="key==index?'active':''"  v-for="(item, key) in this.productLists" :key="key" @click="selecCate(item.id,key)">
+								<li :class="key==index?'active':''" v-for="(item, key) in this.productLists" :key="key" @click="selecCate(item,key)">
 									{{item.name}}
 								</li>
 							</ul>
 						</li>
 					</ul>
-					<ul class="tab_block" style="">
+					<ul  class="tab_block" ref="scroll">
 						<li class="item product" v-for="(item, key) in this.selectedLists" :key="key">
 							<img v-bind:src="item.imageUrl">
 							<div class="center">
@@ -38,29 +39,25 @@
 								<p class="spec">{{item.spec}}</p>
 								<p class="single">¥{{item.marketPrice}}</p>
 							</div>
-							<span @click="changeOpen(key)">
+							<span>
 								<span class="space_fixed">
 									<div class="spaces" v-show="item.isShow">
 										<div class="spa_content top">
 											<p class="tips">请选择要安装该产品的空间</p>
 											<ul class="items">
-												<li class="item">客厅</li>
-												<li class="item">厨房</li>
-												<li class="item">阳台</li>
-												<li class="item">主卧</li>
-												<li class="item">客卫</li>
-												<li class="last">
+												<li class="item" v-for="(item, spacekey) in spaces" :key="spacekey" :class="item.class" @click="selectSpace(spacekey)">{{item.name}}</li>
+												<!-- <li class="last">
 													<div class="show"><i class="icon icon-tianjia1"></i> <span>新增空间</span></div>
-												</li>
+												</li> -->
 											</ul>
 											<div class="footer">
-												<el-button size="mini">取消</el-button>
-												<el-button type="primary" size="mini">确定</el-button>
+												<el-button size="mini" @click="closeSpace(key)">取消</el-button>
+												<el-button type="primary" size="mini" @click="addSpace(item,key)">确定</el-button>
 											</div>
 										</div>
 									</div>
 								</span>
-								<a href="javascript:void(0)" class="right">
+								<a href="javascript:void(0)" class="right" @click="changeOpen(key)">
 									<i class="icon el-icon-circle-plus"></i>
 								</a>
 							</span>
@@ -174,34 +171,34 @@
 								<div class="show" v-show="!isEditOtherPrice">
 									<div class="left">
 										<p class="price_item" v-for="(item,key) in this. servicePriceLists" :key="'other_price_show_'+key" v-if="item.serviceItemPrice != 0">{{item.name}}：<span>¥{{item.serviceItemPrice}}</span></p>
-									</div> 
+									</div>
 									<a href="javascript:void(0)" class="right" @click="openOtherEdit">调整价格</a>
 								</div>
 								<ul class="edit" style="" v-show="isEditOtherPrice">
 									<li v-for="(item,key) in this. servicePriceLists" :key="'other_price_'+key">
 										<div class="left">
 											<div class="input name" style="width: 120px;">
-												<input type="text" placeholder="费用名"v-model="item.name" class="" style="line-height: 32px;">
+												<input type="text" placeholder="费用名" v-model="item.name" class="" style="line-height: 32px;">
 												<p class="error-text" style="display: none;"></p>
 											</div>
 											<div class="discount"><span>按产品总计的</span>
 												<div class="input" style="width: 40px;">
-													<input type="text" v-model="item.percent"  @change="getCalculateTPrice" style="line-height: 32px; text-align: center; padding-left: 0px;">
+													<input type="text" v-model="item.percent" @change="getCalculateTPrice" style="line-height: 32px; text-align: center; padding-left: 0px;">
 													<p class="error-text" style="display: none;"></p>
-												</div> 
+												</div>
 												<span>%收取</span>
 											</div>
 											<div class="result">
 												<div class="input" style="width: 120px;display: inline-block">
-													<input type="text" class="" v-model ="item.serviceItemPrice"  style="line-height: 32px; text-align: center; padding-left: 0px;">
+													<input type="text" class="" v-model="item.serviceItemPrice" style="line-height: 32px; text-align: center; padding-left: 0px;">
 													<p class="error-text" style="display: none;"></p>
 												</div> <a href="javascript:void(0)" @click="deleteOtherPrice(key)"><i class="icon el-icon-error"></i></a>
 											</div>
 											<div style="clear: both;"></div>
-										</div> 
-										
+										</div>
+
 										<a href="javascript:void(0)" class="right" @click="openOtherEdit" v-if="key==0">保存</a>
-										
+
 									</li>
 									<li class="last" @click="addOtherPrice"><i class="icon el-icon-plus"></i> <span>新增附加费用</span></li>
 								</ul>
@@ -234,33 +231,30 @@
 				</div>
 				<el-dialog title="选择客户" :visible.sync="isShowCustomers">
 					<div class="customer_search">
-						<el-input placeholder="请输入客户名称/手机号" suffix-icon="el-icon-search" v-model="customerKeywords" @input="getCustomersPages4User"> </el-input>
+						<el-input placeholder="请输入客户名称/手机号" suffix-icon="el-icon-search" v-model="customerKeywords" @input="getCustomersPages4User">
+						</el-input>
 					</div>
 					<el-table :data="customersPages.data" header-align="center" highlight-current-row>
 						<el-table-column label="" min-width="10%" align="center">
 							<template scope="scope">
-								<el-radio :label="scope.row.id"  v-model="postCustomer.id" @change = "selectionCustomer(scope.$index,scope.row)">&nbsp</el-radio>
+								<el-radio :label="scope.row.id" v-model="postCustomer.id" @change="selectionCustomer(scope.$index,scope.row)">&nbsp</el-radio>
 							</template>
 						</el-table-column>
 						<el-table-column type="index" label="序号" min-width="10%" align="center"></el-table-column>
 						<el-table-column property="name" label="客户名称" min-width="40%" align="center"></el-table-column>
 						<el-table-column property="phone" label="联系电话" min-width="40%" align="center"></el-table-column>
 					</el-table>
-				   <template>
-				      <el-pagination  @current-change="handleCurrentChange"
-									  :current-page="customersPages.current_page" 
-									  :page-size="5"
-									  layout="total, prev, pager, next, jumper"
-									  :total="customersPages.total"
-									  small
-									  class="customer_page"></el-pagination>						    
-				  </template>
-				  <div class="customer_btn">
-					  <el-button size="small">取消</el-button>
-					  <el-button type="primary" size="small">确定</el-button>
-				  </div>
+					<template>
+						<el-pagination @current-change="handleCurrentChange" :current-page="customersPages.current_page" :page-size="5"
+						 layout="total, prev, pager, next, jumper" :total="customersPages.total" small class="customer_page"></el-pagination>
+					</template>
+					<div class="customer_btn">
+						<el-button size="small">取消</el-button>
+						<el-button type="primary" size="small">确定</el-button>
+					</div>
 				</el-dialog>
 			</el-main>
+			
 		</el-container>
 		<div class="block">
 			<div class="content">
@@ -287,18 +281,19 @@
 		name: 'designDetail',
 		data() {
 			return {
-				id:this.$route.query.id,
+				id: this.$route.query.id,
 				drawer: false, //抽屉是否打开
 				isModal: false, //抽屉是否需要遮罩层
 				isEditPrice: false, //是否编辑价格
 				showProduct: true, //是否显示产品页面
 				discountPriceShow: false, //说否展示产品折后价
 				isEditOtherPrice: false, //是否编辑其他价格
-				isShowCustomers:false,//是否展示已有客户
-				customerPage:1,//客户列表当前的分页
-				selectPage:1,//
-				cateId:0,
-				index:0,
+				isShowCustomers: false, //是否展示已有客户
+				customerPage: 1, //客户列表当前的分页
+				selectPage: 1, //产品当前分页
+				cateId: 0,
+				index: -1,//系统当前鼠标点击的序号
+				spaceIndex:0,
 				userInfo: {
 					name: ""
 				},
@@ -313,19 +308,22 @@
 				allPrice: 0,
 				discount: "", //折扣
 				discountPrice: 0,
-				servicePriceLists:[
-					{
-						name:"服务费",
-						percent:20,
-						serviceItemPrice:0
-					}
-				],
-				customersPages:[],//已有的客户
-				postCustomer:{
-					id:0
-				},//提交的客户数据
-				customerKeywords:"",
-				selectKeywords:"",
+				servicePriceLists: [{
+					name: "服务费",
+					percent: 20,
+					serviceItemPrice: 0
+				}],
+				customersPages: [], //已有的客户
+				postCustomer: {
+					id: 0
+				}, //提交的客户数据
+				customerKeywords: "",
+				selectKeywords: "",
+				spaces: [], //产品空间
+				selectedAddSpace:[],//选择的产品空间
+				curSysName:"",//当前选择的系统名称
+				i : 0,
+				deviceListIsLoad:false,
 
 			}
 		},
@@ -337,14 +335,14 @@
 		},
 		methods: {
 			//计算初始服务费
-			initServicePriceList(){
+			initServicePriceList() {
 				this.servicePrice = 0;
-				let calculateTPrice = this.calculateTPrice;	
-				for (let i = 0 ; i<this.servicePriceLists.length;i++) {
+				let calculateTPrice = this.calculateTPrice;
+				for (let i = 0; i < this.servicePriceLists.length; i++) {
 					let price = parseFloat(this.servicePriceLists[i]['percent'] / 100);
 					this.servicePriceLists[i]['serviceItemPrice'] = price * calculateTPrice;
-					let oneServicePrice = this.servicePriceLists[i]['serviceItemPrice'] ;
-					this.servicePrice +=oneServicePrice;
+					let oneServicePrice = this.servicePriceLists[i]['serviceItemPrice'];
+					this.servicePrice += oneServicePrice;
 				}
 			},
 			handleChange(key, k, o) {
@@ -356,9 +354,9 @@
 			},
 			openDrawer() {
 				this.drawer = true;
-			},
-			openSpace() {
-
+				this.$nextTick(function(){
+					this.$refs.scroll.addEventListener("scroll",this.handleScroll,true)
+				});
 			},
 			changeOpen(key) {
 				this.selectedLists.forEach(function(item, index) {
@@ -373,9 +371,10 @@
 				getProductCate().then(response => {
 					var data = response.data.data
 					if (data) {
-						this.productLists = data
+						this.productLists = data;
+						this.curSysName = this.productLists[0]['name'];
 					} else {
-						
+
 					}
 				}).catch(err => {
 					console.log(err)
@@ -384,6 +383,7 @@
 			getNxTemplateDetail() {
 				getTemplateDetail().then(response => {
 					var data = response.data.data
+					let spaces = [];
 					if (data) {
 						this.templateLists = data.spaces
 						this.templateLists.forEach(function(systems, index) {
@@ -392,27 +392,39 @@
 									item['totalPrice'] = item['productNum'] * item['productPrice'];
 								})
 							})
+							let one = {
+								class:"",//控制选中样式
+								name : systems['spaceName']
+							}
+							spaces.push(one);
 						});
+						this.spaces = spaces;
 						this.getCalculateTPrice();
 					} else {
-						
+
 					}
 				}).catch(err => {
 					console.log(err)
 				})
 			},
-			
+
 			getPageProduct4Select() {
-				getPageProduct4Select(this.selectPage,this.cateId,this.selectKeywords).then(response => {
+				getPageProduct4Select(this.selectPage, this.cateId, this.selectKeywords).then(response => {
 					var data = response.data.data
 					if (data) {
-						this.selectedLists = data.data
+						// this.selectedLists = data.data;
+						this.selectedLists.push.apply(this.selectedLists,data.data);
+						this.selectPage = parseInt(data['current_page']);
 					} else {
-						
+
 					}
 				}).catch(err => {
 					console.log(err)
 				})
+			},
+			chageProductInput(){
+				this.selectPage = 1;
+				this.getPageProduct4Select();
 			},
 			changeView() {
 				if (this.viewName == "产品视图") {
@@ -449,9 +461,9 @@
 					systems['systems'].forEach(function(prods, index) {
 						prods['prods'].forEach(function(item, index) {
 							totalPrice += item['productNum'] * item['productPrice'];
-						}, totalPrice)
-					}, totalPrice)
-				}, totalPrice);
+						})
+					})
+				});
 
 				//计算折扣
 				this.calculateTPrice = totalPrice;
@@ -466,8 +478,8 @@
 					}
 					this.discountPrice = this.calculateTPrice * parseFloat(this.discount / 10).toFixed(2);
 				}
-				
-				this.initServicePriceList();//计算服务费
+
+				this.initServicePriceList(); //计算服务费
 				this.allPrice = this.discountPrice + this.servicePrice;
 
 				this.calculateTPrice = this.calculateTPrice.toFixed(2);
@@ -496,56 +508,164 @@
 				this.openEdit();
 				this.discountPriceShow = !this.discountPriceShow;
 			},
-			addOtherPrice(){
+			addOtherPrice() {
 				//新增其他费用
 				var oneItem = {
-					name :"",
-					percent:0,
-					serviceItemPrice:0
+					name: "",
+					percent: 0,
+					serviceItemPrice: 0
 				}
 				this.servicePriceLists.push(oneItem);
-				console.log(this.servicePriceLists)
 			},
-			deleteOtherPrice(key){
+			deleteOtherPrice(key) {
 				//删除一个其他项价格
 				this.servicePriceLists.splice(key, 1);
 				this.getCalculateTPrice();
 			},
-			openCustomers(){
+			openCustomers() {
 				//打开客人已有客户
 				this.isShowCustomers = true;
 				this.getCustomersPages4User();
 			},
-			getCustomersPages4User(){
-				getCustomersPages(this.customerPage,this.customerKeywords).then(response => {
+			getCustomersPages4User() {
+				getCustomersPages(this.customerPage, this.customerKeywords).then(response => {
 					var data = response.data.data
 					if (data) {
 						this.customersPages = data;
-						this.customersPages['current_page'] = parseInt(data.current_page) ;
+						this.customersPages['current_page'] = parseInt(data.current_page);
 					} else {
-						
+
 					}
 				}).catch(err => {
 					console.log(err)
 				})
 			},
-			handleCurrentChange(val){
+			handleCurrentChange(val) {
 				//翻页
 				this.customerPage = val;
 				this.getCustomersPages4User();
 			},
-			selectionCustomer(index,row){
+			selectionCustomer(index, row) {
 				//选中的已有客户
 				this.postCustomer = row;
-				console.log(this.postCustomer)
+
+			},
+			selecCate(item, key) {
+				this.cateId = item['id'];
+				this.index = key;
+				this.curSysName = item['name']
+				this.getPageProduct4Select();
+			},
+			selectSpace(key){
+				this.spaces.forEach(function(item, index) {
+					if(index == key){
+						if(item['class'] == ""){
+							item['class'] = "active";
+						}else{
+							item['class'] = "";
+						}
+					}	
+				});
+			},
+			addSpace(prod,key){
+				let selectedAdd = [];
+				this.spaces.forEach(function(item, index) {
+					if(item['class'] == "active"){
+						selectedAdd.push(item['name']);
+					}
+				});
+				this.selectedAddSpace = selectedAdd;//在所选空间里面新增产品
+				this.addProd2Template(prod);
+				this.closeSpace(key);
+			},
+			
+			closeSpace(key){
+				//关闭产品空间面板
+				this.spaces.forEach(function(space, index) {
+					space['class'] = "";
+				});
+				this.selectedAddSpace = [];
+				this.selectedLists[key]['isShow'] = false;
+			},
+			
+			addProd2Template(prod){
+			//往所选空间里面新增产品
+				let systemId = prod['topCatalogId'];
+				let proId = prod['id'];
+				let selectSpace = this.selectedAddSpace;
+				let curSysName = this.curSysName;
+				
+				this.templateLists.forEach(function(systems, index) {
+					var indexof = selectSpace.indexOf(systems['spaceName']);
+					if(indexof != '-1'){
+						let hasSys = false;//是否已经有此系统
+						let hasProd = false;//是否已经有此产品
+						systems['systems'].forEach(function(prods, index) {
+							if(prods['systemId'] == systemId){
+								prods['prods'].forEach(function(item, index) {
+									if(item['productId'] == proId){
+										hasProd = true;
+										item['productNum'] += 1;
+										item['totalPrice'] = item['productNum'] * item['productPrice'];
+									}
+								});
+								hasSys = true;
+								if(!hasProd){
+									let addProItem = {
+										productId:prod['id'],
+										productCode :prod['code'],
+										productImageUrl:prod['imageUrl'],
+										productName:prod['name'],
+										productNum:1,
+										productPrice:prod['marketPrice'],
+										productSn:"",
+										totalPrice:prod['marketPrice'],
+									}
+									prods['prods'].push(addProItem);
+								}
+							}		
+						});
+						if(!hasSys){
+							let addSysItem = {
+								systemId:systemId,
+								systemName:curSysName,
+								prods:[{
+									productId:prod['id'],
+									productCode :prod['code'],
+									productImageUrl:prod['imageUrl'],
+									productName:prod['name'],
+									productNum:1,
+									productPrice:prod['marketPrice'],
+									productSn:"",
+									totalPrice:prod['marketPrice'],
+								}]
+							};
+							systems['systems'].push(addSysItem);
+						}
+					}
+				});
+				this.getCalculateTPrice();
+			},
+		
+			handleScroll(){
+				// 页面滚动距顶部距离
+				let scrollTop = this.$refs.scroll.scrollTop;
+				let clientHeight = this.$refs.scroll.clientHeight;// 获取可视区的高度
+				let scrollHeight = this.$refs.scroll.scrollHeight;// 获取滚动条的总高度
+				let height = 50;
+				var scroll = scrollTop - this.i;
+				this.i = scrollTop;
+				let reduce = scrollHeight-clientHeight;
+				let gap = parseFloat(scrollTop/reduce).toFixed(2);
+				if(scroll>=0){
+					if( scrollTop + clientHeight >= scrollHeight){
+						this.selectPage++;
+						this.getPageProduct4Select();
+					}
+				}
+
 				
 			},
-			selecCate(cateId,key){
-				this.cateId = cateId;
-				this.index = key;
-				this.getPageProduct4Select();
-			}
-
 		}
 	}
 </script>
@@ -561,8 +681,9 @@
 	#designDetail .el-drawer {
 		position: static !important;
 	}
+
 	#designDetail .has-gutter .el-table-column--selection .cell {
-	    display: none; 
+		display: none;
 	}
 </style>
 <style scoped>

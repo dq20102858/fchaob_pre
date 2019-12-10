@@ -8,6 +8,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
+import infiniteScroll from 'vue-infinite-scroll';
+Vue.use(infiniteScroll)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
