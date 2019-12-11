@@ -465,6 +465,7 @@
     box-sizing: border-box;
     -webkit-transition: all .2s ease-in;
     transition: all .2s ease-in;
+	z-index: 1003;
 }
 
 .switch p{
@@ -626,16 +627,17 @@
 .product_detail ul li {
 	height: 130px;
 	line-height: 130px;
+	position: relative;
 }
 
 
 .product_detail ul .d_p span {
-	display: block;
+/* 	display: block;
 	float: left;
 	margin-left: 16px;
 	margin-top: -30px;
 	font-size: 14px;
-	color: #18181c;
+	color: #18181c; */
 }
 
 .product_detail ul .d_tp {
@@ -1142,6 +1144,78 @@
 .customer_search{
 	width: 70%;
 }
+.room_detail .r_p .product_name,.d_p .product_name{
+	font-size: 14px;
+	color: #18181c;
+	position: absolute;
+	left: 120px;
+	top: -33px;
+	display: inline-block;
+	width: 150px;
+	text-align: left;
+}
+
+.room_detail .r_p .spaceNums{
+	font-size: 14px;
+	color: #9092a5;
+	height: 40px;
+	position: absolute;
+	left: 120px;
+	top:33px;
+	text-align: left;
+}
+.room_detail .r_p  .specs,.d_p .specs{
+	font-size: 14px;
+	color: #9092a5;
+	position: absolute;
+	left: 120px;
+	text-align: left;
+}
+.room_detail .r_ep{    
+	font-size: 14px;
+    line-height: 20px
+}
+.room_detail .r_ep .line1{
+	text-decoration: line-through;
+	color: #d5d7e1;
+	margin-top: 20px;
+	display: inline-block
+}
+
+.room_detail .r_ep .line2{
+    font-size: 14px;
+    line-height: 20px;
+    color: #18181c;
+	margin-top: 20px;
+	display: inline-block;
+}
+.r_n ,.d_ep .productPrice {
+	line-height: 20px;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #838589;
+	display: block;
+}
 
 
+.r_tp ,.d_tp  .totalPrice{
+	line-height: 20px;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #18181c;
+	font-weight: 600;
+	display: block;
+}
+.r_o ,.d_o .del{
+	line-height: 20px;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #838589;
+	display: block;
+}
+.d_n .el-input-number{
+	position: absolute;
+	left: 15px;
+	top: 20px;
+}
 

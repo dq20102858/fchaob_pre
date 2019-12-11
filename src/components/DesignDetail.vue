@@ -96,16 +96,20 @@
 									</div>
 									<div class="pro_right">
 										<div v-for="(onePro, o) in one.prods" :key="o">
-											<li class="d_p"><img v-bind:src="onePro.productImageUrl"><span>{{onePro.productName}}</span></li>
+											<li class="d_p">
+												<img v-bind:src="onePro.productImageUrl">
+												<span class="product_name">{{onePro.productName}}</span>
+												<span class="specs">{{onePro.productSpecs}}</span>
+											</li>
 											<li class="d_n">
 												<template>
 													<el-input-number v-model="onePro.productNum" @change="handleChange(key,k,o)" :min="1" :max="1000" label="描述文字"
 													 size="mini"></el-input-number>
 												</template>
 											</li>
-											<li class="d_ep">¥{{onePro.productPrice}}</li>
-											<li class="d_tp">¥{{onePro.totalPrice}} </li>
-											<li class="d_o del_icon" @click="delProduct(key,k,o)">删除</li>
+											<li class="d_ep"><span class="productPrice">¥{{onePro.productPrice}}</span></li>
+											<li class="d_tp"><span class="totalPrice">¥{{onePro.totalPrice}}</span> </li>
+											<li class="d_o del_icon" @click="delProduct(key,k,o)"><span class="del">删除</span></li>
 										</div>
 									</div>
 								</ul>
@@ -124,16 +128,28 @@
 								<li class="r_r">备注 </li>
 								<li class="r_o">操作 </li>
 							</ul>
-							<div class="product_detail" v-for="(item, key) in this.templateLists" :key="'product-'+key">
-								<p>{{item.spaceName}}</p>
+							<div class="product_detail" v-for="(item, key) in this.productView" :key="'product-'+key">
+								<p>{{item.systemName}}</p>
 								<!-- 循环产品开始-->
-								<ul class="room_detail">
-									<li class="r_p"><img><span></span></li>
-									<li class="r_ep">¥28888</li>
-									<li class="r_n"></li>
-									<li class="r_tp">¥28888</li>
-									<li class="r_r">¥28888</li>
-									<li class="r_o del_icon">删除</li>
+								<ul class="room_detail" v-for="(one, k) in item.prods" :key="k">
+									<li class="r_p">
+										<img v-bind:src="one.productImageUrl">
+										<span class="product_name">{{one.productName}}</span>
+										<span class="specs">{{one.productSpecs}}</span>
+										<div class="spaceNums">
+											<span v-for="(o, kk) in one.spaceNums" :key="kk" >{{o.spaceName}} * {{o.num}}</span> 
+										</div>
+										
+									</li>
+									<li class="r_ep">
+										<!-- <span class="line1"> ¥{{one.productPrice}} </span> -->
+										<span class="line2"> ¥{{one.productPrice}} <!-- <i class="el-icon-edit"></i> --></span>
+										
+									</li>
+									<li class="r_n"><span class="productPrice">{{one.productTotalNum}}</span></li>
+									<li class="r_tp"><span class="totalPrice">¥{{one.totalPrice}}</span></li>
+									<li class="r_r"></li>
+									<li class="r_o del_icon"><span class="del" @click="delProductView(one.productId)">删除</span></li>
 								</ul>
 								<!-- 循环产品结束-->
 								<div style="clear: both;"></div>
@@ -259,7 +275,7 @@
 		<div class="block">
 			<div class="content">
 				<div class="fixed_btn">
-					<el-button class="fixed_btn_left">返回首页</el-button>
+					<el-button class="fixed_btn_left" @click="goBack">返回首页</el-button>
 					<p class="fixed_total">总计</p>
 					<p class="fixed_price">{{allPrice}}</p>
 					<!-- <p class="fixed_space">调整空间</p> -->
@@ -323,7 +339,9 @@
 				selectedAddSpace:[],//选择的产品空间
 				curSysName:"",//当前选择的系统名称
 				i : 0,
-				deviceListIsLoad:false,
+				canLoad:true,//分页是否可以继续请求加载
+				productView:[],//产品视图
+				
 
 			}
 		},
@@ -333,6 +351,9 @@
 			this.getPageProduct4Select();
 			this.initServicePriceList();
 		},
+		// watch: {
+		//     templateLists : 'handelProductView' // 值可以为methods的方法名
+		// },
 		methods: {
 			//计算初始服务费
 			initServicePriceList() {
@@ -351,6 +372,7 @@
 				let num = obj['productNum'];
 				obj['totalPrice'] = obj['productPrice'] * obj['productNum'];
 				this.getCalculateTPrice();
+				this.handelProductView();
 			},
 			openDrawer() {
 				this.drawer = true;
@@ -380,8 +402,9 @@
 					console.log(err)
 				})
 			},
+			//获取模板房间视图的数据
 			getNxTemplateDetail() {
-				getTemplateDetail().then(response => {
+				getTemplateDetail(this.id).then(response => {
 					var data = response.data.data
 					let spaces = [];
 					if (data) {
@@ -400,6 +423,7 @@
 						});
 						this.spaces = spaces;
 						this.getCalculateTPrice();
+						this.handelProductView();
 					} else {
 
 					}
@@ -411,12 +435,12 @@
 			getPageProduct4Select() {
 				getPageProduct4Select(this.selectPage, this.cateId, this.selectKeywords).then(response => {
 					var data = response.data.data
-					if (data) {
+					if (data.data.length>0) {
 						// this.selectedLists = data.data;
 						this.selectedLists.push.apply(this.selectedLists,data.data);
 						this.selectPage = parseInt(data['current_page']);
 					} else {
-
+						this.canLoad = false;
 					}
 				}).catch(err => {
 					console.log(err)
@@ -440,6 +464,42 @@
 				}
 				this.showProduct = !this.showProduct;
 			},
+			//处理产品视图数据
+			handelProductView(){
+				let productLists = [];
+				let list = [];
+				let templateLists = this.templateLists
+				templateLists.forEach(function(systems, index) {
+					systems['systems'].forEach(function(prods, index) {
+						prods['prods'].forEach(function(item, index) {
+							item['systemId'] = prods['systemId'];
+							let productId = item["productId"];
+							if(productLists.hasOwnProperty(productId)){
+								productLists[productId]["productTotalNum"]+=item['productNum'];
+								productLists[productId]["spaceNums"].push({spaceName:systems['spaceName'],num:item['productNum']});
+							}else{
+								productLists[productId] = item;
+								productLists[productId]["productTotalNum"] = item['productNum'];
+								productLists[productId]["spaceNums"]=[{spaceName:systems['spaceName'],num:item['productNum']}];
+							}
+							productLists[productId]["totalPrice"] = productLists[productId]["productNum"] * item['productPrice'];
+						});
+						
+						let systemId = prods['systemId'];
+						list[systemId] = {
+							systemName : prods['systemName'],
+							systemId : systemId,
+							prods:[]
+						};
+					})
+				});
+				productLists.forEach(function(prod,index){
+					let systemId = prod['systemId'];
+					list[systemId]['prods'].push(prod);
+				});
+				list = list.filter(function(e){return e});
+				this.productView = list;
+			},
 			delProduct(key, k, o) {
 				var sysems = this.templateLists[key]['systems'];
 				var prods = sysems[k]['prods'];
@@ -453,6 +513,7 @@
 					}
 				}
 				this.getCalculateTPrice();
+				this.handelProductView();
 			},
 			getCalculateTPrice() {
 				//计算总价
@@ -554,6 +615,8 @@
 				this.cateId = item['id'];
 				this.index = key;
 				this.curSysName = item['name']
+				this.selectPage = 1;
+				this.selectedLists = [];
 				this.getPageProduct4Select();
 			},
 			selectSpace(key){
@@ -645,19 +708,19 @@
 					}
 				});
 				this.getCalculateTPrice();
+				this.handelProductView();
 			},
 		
 			handleScroll(){
 				// 页面滚动距顶部距离
 				let scrollTop = this.$refs.scroll.scrollTop;
 				let clientHeight = this.$refs.scroll.clientHeight;// 获取可视区的高度
-				let scrollHeight = this.$refs.scroll.scrollHeight;// 获取滚动条的总高度
-				let height = 50;
+				let scrollHeight = this.$refs.scroll.scrollHeight;// 获取滚动条的总高
 				var scroll = scrollTop - this.i;
 				this.i = scrollTop;
 				let reduce = scrollHeight-clientHeight;
 				let gap = parseFloat(scrollTop/reduce).toFixed(2);
-				if(scroll>=0){
+				if(scroll>=0 && this.canLoad){
 					if( scrollTop + clientHeight >= scrollHeight){
 						this.selectPage++;
 						this.getPageProduct4Select();
@@ -666,6 +729,41 @@
 
 				
 			},
+			goBack(){
+				//返回首页
+				this.$confirm('返回无法保存已编辑的信息。确定返回？', '提示', {
+				          confirmButtonText: '确定',
+				          cancelButtonText: '取消',
+				          type: 'warning'
+				        }).then(() => {
+				          this.$router.push({ name: 'design'});
+				        }).catch(() => {
+				                   
+				        });
+				      
+			},
+			delProductView(productId){
+				let templateLists = this.templateLists;
+				templateLists.forEach(function(systems, index1) {
+					systems['systems'].forEach(function(prods, index2) {
+						prods['prods'].forEach(function(item, index3) {
+							if(item['productId'] == productId){
+								if (prods['prods'].length > 1) {
+									prods['prods'].splice(index3, 1);
+								} else {
+									if (systems['systems'].length > 1) {
+										systems['systems'].splice(index2, 1);
+									} else {
+										templateLists.splice(index1, 1);
+									}
+								}
+							}
+						})
+					})
+				});
+				this.handelProductView();
+				this.getCalculateTPrice();
+			}
 		}
 	}
 </script>

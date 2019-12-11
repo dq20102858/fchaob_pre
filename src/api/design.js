@@ -14,10 +14,13 @@ export function getProductCate() {
 	})
 }
 
-export function getTemplateDetail() {
+export function getTemplateDetail(id) {
 	return request({
 		url: 'design/getNxTemplateDetail',
 		method: 'get',
+		params: {
+			id
+		}
 	})
 }
 export function getPageProduct4Select(page,cateId,keyword) {
