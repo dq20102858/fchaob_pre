@@ -149,7 +149,10 @@
 									<li class="r_n"><span class="productPrice">{{one.productTotalNum}}</span></li>
 									<li class="r_tp"><span class="totalPrice">¥{{one.totalPrice}}</span></li>
 									<li class="r_r"></li>
-									<li class="r_o del_icon"><span class="del" @click="delProductView(one.productId)">删除</span></li>
+									<li class="r_o del_icon">
+										<span class="del" @click="delProductView(one.productId)">删除</span>
+										<span class="del" @click="exchageProductView(one.productId)">替换</span>
+									</li>
 								</ul>
 								<!-- 循环产品结束-->
 								<div style="clear: both;"></div>
@@ -269,6 +272,42 @@
 						<el-button type="primary" size="small">确定</el-button>
 					</div>
 				</el-dialog>
+				
+				<el-dialog title="替换" :visible.sync="isExchage">
+					<div class="exchange_search">
+						<el-select v-model="cateId" placeholder="请选择" @change="chageProductInput">
+							<el-option v-for="(item, key) in this.productLists" :key="'productLists'+key" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+					</div>
+					<div class="exchange_search exchage_input">
+						<el-input v-model="selectKeywords" suffix-icon="el-icon-search"  @input="chageProductInput"></el-input>
+					</div>
+					<el-table :data="this.selectedLists" header-align="center" highlight-current-row>
+						<el-table-column label="" min-width="10%" align="center">
+							<template scope="scope">
+								<el-radio :label="scope.row.id" v-model="postCustomer.id" @change="selectionCustomer(scope.$index,scope.row)">&nbsp</el-radio>
+							</template>
+						</el-table-column>
+						<el-table-column label="产品" min-width="40%" align="left">
+							<template scope="scope">
+								<img v-bind:src="scope.row.imageUrl" style="width: 80px; height: 80px;"/>
+								<span style="position: relative;left: 20px;display: inline-block;top: -35px;">{{scope.row.name}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column property="spec" label="规格" min-width="20%" align="center"></el-table-column>
+						<el-table-column property="catalogName" label="分类" min-width="10%" align="center"></el-table-column>
+						<el-table-column property="marketPrice" label="单价" min-width="10%" align="center"></el-table-column>
+					</el-table>
+					<template>
+						<el-pagination @current-change="handleCurrentChange" :current-page="selectPage" :page-size="5"
+						 layout="total, prev, pager, next, jumper" :total="selectTotalPage" small class="customer_page"></el-pagination>
+					</template>
+					<div class="customer_btn">
+						<el-button size="small">取消</el-button>
+						<el-button type="primary" size="small">确定</el-button>
+					</div>
+				</el-dialog>
+				
 			</el-main>
 			
 		</el-container>
@@ -305,9 +344,11 @@
 				discountPriceShow: false, //说否展示产品折后价
 				isEditOtherPrice: false, //是否编辑其他价格
 				isShowCustomers: false, //是否展示已有客户
+				isExchage: false,//是否替换已有产品
 				customerPage: 1, //客户列表当前的分页
 				selectPage: 1, //产品当前分页
-				cateId: 0,
+				selectTotalPage:1,
+				cateId: "",
 				index: -1,//系统当前鼠标点击的序号
 				spaceIndex:0,
 				userInfo: {
@@ -439,6 +480,7 @@
 						// this.selectedLists = data.data;
 						this.selectedLists.push.apply(this.selectedLists,data.data);
 						this.selectPage = parseInt(data['current_page']);
+						this.selectTotalPage = parseInt(data['total']);
 					} else {
 						this.canLoad = false;
 					}
@@ -448,6 +490,7 @@
 			},
 			chageProductInput(){
 				this.selectPage = 1;
+				this.selectedLists = [];
 				this.getPageProduct4Select();
 			},
 			changeView() {
@@ -763,6 +806,10 @@
 				});
 				this.handelProductView();
 				this.getCalculateTPrice();
+			},
+			exchageProductView(productId){
+				this.isExchage = true;
+				
 			}
 		}
 	}

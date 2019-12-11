@@ -1218,4 +1218,10 @@
 	left: 15px;
 	top: 20px;
 }
-
+.exchange_search{
+	float: left;
+	margin-right: 10px
+}
+.exchage_input{
+	width: 60%;
+}
