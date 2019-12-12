@@ -62,9 +62,9 @@
 								</a>
 							</span>
 						</li>
-						<li class="last">
+						<!-- <li class="last">
 							<div class="load" style=""></div> <span>加载中...</span>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 			</div>
@@ -142,13 +142,26 @@
 										
 									</li>
 									<li class="r_ep">
-										<!-- <span class="line1"> ¥{{one.productPrice}} </span> -->
-										<span class="line2"> ¥{{one.productPrice}} <!-- <i class="el-icon-edit"></i> --></span>
-										
+										<span class="line1" v-show="openSwitch[one['productId']]['isShowOriginPrice']"> ¥{{one.orginPrice}} </span>
+										<span class="line2" v-show="openSwitch[one['productId']]['isOpenEdit']"> ¥{{one.orginPrice}} <i class="el-icon-edit" @click="editShowPrice(one.productId)"></i></span>
+										<span class="line3" v-show="openSwitch[one['productId']]['isOpenEditV2']"> ¥{{one.productPrice}} <i class="el-icon-edit" @click="editShowPriceV2(one.productId)"></i></span>
+										<div class="edit_input" v-show="openSwitch[one['productId']]['changePrice']">
+											<el-input v-model="one.productPrice" placeholder="请输入内容" @blur="confirmChangePrice(key,k,one.productId)" :ref="'changePrice'+one.productId" autofocus></el-input>
+										</div>
 									</li>
 									<li class="r_n"><span class="productPrice">{{one.productTotalNum}}</span></li>
 									<li class="r_tp"><span class="totalPrice">¥{{one.totalPrice}}</span></li>
-									<li class="r_r"></li>
+									<li class="r_r">
+										<div class="remark_span" v-show="!openSwitch[one['productId']]['isRemark']" @click="openRemark(one.productId)">
+											<span v-if="one.remark=='' || typeof(one.remark)=='undefined'">点击输入备注</span>
+											<span v-else>{{one.remark}}</span>
+										</div>
+										
+										<div class="remark_div" v-show="openSwitch[one['productId']]['isRemark']">
+											<el-input type="text" v-model="one.remark" @blur="addRemark(key,k,one.productId)" :ref="'remark'+one.productId" autofocus></el-input>
+										</div>
+										
+									</li>
 									<li class="r_o del_icon">
 										<span class="del" @click="delProductView(one.productId)">删除</span>
 										<span class="del" @click="exchageProductView(one.productId)">替换</span>
@@ -226,12 +239,14 @@
 						<!--价格计算结束-->
 						<div id="setInfo" class="user_container">
 							<div class="form">
-								<div class="form-item col-2"><label class="label"><span class="required">*</span>客户名称</label> <input type="text"
-									 placeholder="请输入客户名称" maxlength="50" class="">
+								<div class="form-item col-2">
+									<label class="label"><span class="required">*</span>客户名称</label> 
+									<input type="text" placeholder="请输入客户名称" maxlength="50" v-model="postCustomer.name">
 									<div class="tips" style="display: none;">请输入用户名</div>
 								</div>
-								<div class="form-item col-2"><label class="label"><span class="required">*</span>联系电话 </label> <input type="text"
-									 placeholder="请输入手机号码" class="">
+								<div class="form-item col-2">
+									<label class="label"><span class="required">*</span>联系电话 </label> 
+									<input type="text" placeholder="请输入手机号码" v-model="postCustomer.phone">
 									<div class="tips" style="display: none;">请输入正确的手机号</div>
 								</div>
 								<div class="form-item act">
@@ -239,10 +254,20 @@
 										选择已有客户
 									</a>
 								</div>
-								<div class="form-item col-2"><label class="label">户型</label><input maxlength="10" type="text" placeholder="请输入户型"></div>
-								<div class="form-item col-2"><label class="label">地址</label><input type="text" placeholder="请输入地址" maxlength="60"></div>
-								<div class="form-item col-1"><label class="label">方案设计</label><input type="text" placeholder=""></div>
-								<div class="form-item col-1"><label class="label">方案说明</label><textarea type="text" placeholder="方案说明"></textarea></div>
+								<div class="form-item col-2">
+									<label class="label">户型</label>
+									<input maxlength="10" type="text" placeholder="请输入户型" v-model="postCustomer.houseType">
+								</div>
+								<div class="form-item col-2">
+									<label class="label">地址</label><input type="text" placeholder="请输入地址" maxlength="60" v-model="postCustomer.address">
+								</div>
+								<div class="form-item col-1">
+									<label class="label">方案设计</label><input type="text" placeholder="" v-model="postCustomer.design">
+								</div>
+								<div class="form-item col-1">
+									<label class="label">方案说明</label>
+									<textarea type="text" placeholder="方案说明" v-model="postCustomer.description"></textarea>
+								</div>
 							</div>
 						</div>
 						<div style="clear: both;"></div>
@@ -268,8 +293,8 @@
 						 layout="total, prev, pager, next, jumper" :total="customersPages.total" small class="customer_page"></el-pagination>
 					</template>
 					<div class="customer_btn">
-						<el-button size="small">取消</el-button>
-						<el-button type="primary" size="small">确定</el-button>
+						<el-button size="small" @click="cancelCustomer">取消</el-button>
+						<el-button type="primary" size="small" @click="confirmPostCustomer">确定</el-button>
 					</div>
 				</el-dialog>
 				
@@ -285,7 +310,7 @@
 					<el-table :data="this.selectedLists" header-align="center" highlight-current-row>
 						<el-table-column label="" min-width="10%" align="center">
 							<template scope="scope">
-								<el-radio :label="scope.row.id" v-model="postCustomer.id" @change="selectionCustomer(scope.$index,scope.row)">&nbsp</el-radio>
+								<el-radio :label="scope.row.id" v-model="exchangeProd.id" @change="selectionProduct(scope.$index,scope.row)">&nbsp</el-radio>
 							</template>
 						</el-table-column>
 						<el-table-column label="产品" min-width="40%" align="left">
@@ -303,8 +328,8 @@
 						 layout="total, prev, pager, next, jumper" :total="selectTotalPage" small class="customer_page"></el-pagination>
 					</template>
 					<div class="customer_btn">
-						<el-button size="small">取消</el-button>
-						<el-button type="primary" size="small">确定</el-button>
+						<el-button size="small" @click="cancelExchange">取消</el-button>
+						<el-button type="primary" size="small"  @click="confirmExchange">确定</el-button>
 					</div>
 				</el-dialog>
 				
@@ -345,6 +370,7 @@
 				isEditOtherPrice: false, //是否编辑其他价格
 				isShowCustomers: false, //是否展示已有客户
 				isExchage: false,//是否替换已有产品
+				openSwitch:{},
 				customerPage: 1, //客户列表当前的分页
 				selectPage: 1, //产品当前分页
 				selectTotalPage:1,
@@ -382,6 +408,8 @@
 				i : 0,
 				canLoad:true,//分页是否可以继续请求加载
 				productView:[],//产品视图
+				exchangeProd:[],//替换的产品信息
+				preProductId:0,//替换前的产品id
 				
 
 			}
@@ -449,11 +477,20 @@
 					var data = response.data.data
 					let spaces = [];
 					if (data) {
-						this.templateLists = data.spaces
+						this.templateLists = data.spaces;
+						let openSwitch = this.openSwitch;
+						let that = this;
 						this.templateLists.forEach(function(systems, index) {
 							systems['systems'].forEach(function(prods, index) {
 								prods['prods'].forEach(function(item, index) {
 									item['totalPrice'] = item['productNum'] * item['productPrice'];
+									let productId = item['productId'];
+									that.$set(openSwitch,productId,{});
+									that.$set(openSwitch[productId],"changePrice",false);
+									that.$set(openSwitch[productId],"isOpenEdit",true);
+									that.$set(openSwitch[productId],"isOpenEditV2",false);
+									that.$set(openSwitch[productId],"isShowOriginPrice",false);
+									that.$set(openSwitch[productId],"isRemark",false);
 								})
 							})
 							let one = {
@@ -462,9 +499,11 @@
 							}
 							spaces.push(one);
 						});
+						this.openSwitch = openSwitch;
 						this.spaces = spaces;
 						this.getCalculateTPrice();
 						this.handelProductView();
+						// console.log(this.templateLists);
 					} else {
 
 					}
@@ -509,23 +548,28 @@
 			},
 			//处理产品视图数据
 			handelProductView(){
-				let productLists = [];
+				this.productView = [];
+				let productListsTmp = [];
 				let list = [];
-				let templateLists = this.templateLists
-				templateLists.forEach(function(systems, index) {
-					systems['systems'].forEach(function(prods, index) {
-						prods['prods'].forEach(function(item, index) {
-							item['systemId'] = prods['systemId'];
+				let templateLists = JSON.parse(JSON.stringify(this.templateLists));		
+				let that = this;
+				templateLists.forEach(function(systems, index1) {
+					systems['systems'].forEach(function(prods, index2) {
+						prods['prods'].forEach(function(item, index3) {
 							let productId = item["productId"];
-							if(productLists.hasOwnProperty(productId)){
-								productLists[productId]["productTotalNum"]+=item['productNum'];
-								productLists[productId]["spaceNums"].push({spaceName:systems['spaceName'],num:item['productNum']});
+							if(productListsTmp.hasOwnProperty(productId)){
+								that.$set(productListsTmp[productId],"productTotalNum",productListsTmp[productId]["productTotalNum"]+item['productNum']);
+								productListsTmp[productId]["spaceNums"].push({spaceName:systems['spaceName'],num:item['productNum']});
+								that.$set(productListsTmp[productId],"totalPrice",parseInt(productListsTmp[productId]["productTotalNum"]) * item['productPrice']);
+								
 							}else{
-								productLists[productId] = item;
-								productLists[productId]["productTotalNum"] = item['productNum'];
-								productLists[productId]["spaceNums"]=[{spaceName:systems['spaceName'],num:item['productNum']}];
+								that.$set(productListsTmp,productId,item);
+								that.$set(productListsTmp[productId],"productTotalNum",item['productNum']);
+								let one = [{spaceName:systems['spaceName'],num:item['productNum']}];
+								that.$set(productListsTmp[productId],"spaceNums",one);
+								that.$set(productListsTmp[productId],"systemId",prods['systemId']);
+								that.$set(productListsTmp[productId],"totalPrice",parseInt(productListsTmp[productId]["productTotalNum"]) * item['productPrice']);
 							}
-							productLists[productId]["totalPrice"] = productLists[productId]["productNum"] * item['productPrice'];
 						});
 						
 						let systemId = prods['systemId'];
@@ -536,13 +580,14 @@
 						};
 					})
 				});
-				productLists.forEach(function(prod,index){
+				productListsTmp.forEach(function(prod,index){
 					let systemId = prod['systemId'];
 					list[systemId]['prods'].push(prod);
 				});
 				list = list.filter(function(e){return e});
 				this.productView = list;
 			},
+			//删除产品
 			delProduct(key, k, o) {
 				var sysems = this.templateLists[key]['systems'];
 				var prods = sysems[k]['prods'];
@@ -772,8 +817,8 @@
 
 				
 			},
+			//返回首页
 			goBack(){
-				//返回首页
 				this.$confirm('返回无法保存已编辑的信息。确定返回？', '提示', {
 				          confirmButtonText: '确定',
 				          cancelButtonText: '取消',
@@ -785,6 +830,7 @@
 				        });
 				      
 			},
+			//产品视图中删除产品
 			delProductView(productId){
 				let templateLists = this.templateLists;
 				templateLists.forEach(function(systems, index1) {
@@ -807,9 +853,131 @@
 				this.handelProductView();
 				this.getCalculateTPrice();
 			},
+			//点击替换
 			exchageProductView(productId){
 				this.isExchage = true;
+				this.preProductId = productId;
+			},
+			//选择替换的产品
+			selectionProduct(index,row){
+				this.exchangeProd = row;
+			},
+			//确认替换产品
+			confirmExchange(){
+				let exchageProd = this.exchangeProd;
+				let preProductId = this.preProductId;
+				let templateLists = this.templateLists;
 				
+				templateLists.forEach(function(systems, index) {
+					systems['systems'].forEach(function(prods, key) {
+						prods['prods'].forEach(function(item, k) {
+							if(item['productId'] == preProductId){
+								let product = {
+									productCode:exchageProd['code'],
+									productId:exchageProd['id'],
+									productImageUrl:exchageProd['imageUrl'],
+									productName:exchageProd['name'],
+									productPrice:exchageProd['marketPrice'],
+									productSn:"",
+									productSpecs:exchageProd['spec'],
+									productNum:item['productNum'],
+									totalPrice:item['productNum'] * exchageProd['marketPrice']
+								};
+								templateLists[index]['systems'][key]['prods'][k] = product;
+							}
+						})
+					})
+				});
+				this.templateLists = templateLists;
+				this.getCalculateTPrice();				
+				this.handelProductView();
+				this.isExchage = false;
+				this.exchangeProd = [];
+			},
+			//取消替换产品
+			cancelExchange(){
+				this.isExchage = false;
+				this.preProductId = 0;
+			},
+			//确认选择的已有客户
+			confirmPostCustomer(){
+				this.isShowCustomers = false;
+			},
+			//取消选择客户
+			cancelCustomer(){
+				this.isShowCustomers = false;
+				this.postCustomer = {};
+			},
+			editShowPrice(productId){
+				this.openSwitch[productId]['changePrice'] = true;
+				let ref = "changePrice"+productId;
+				let array = this.$refs;
+				array[ref][0].focus()
+				this.$nextTick(function(){
+					array[ref][0].focus()
+				});
+			},
+			//确认修改价格
+			confirmChangePrice(key,k,productId){
+				this.openSwitch[productId]['changePrice'] = false;
+				this.openSwitch[productId]['isShowOriginPrice'] = true
+				this.openSwitch[productId]['isOpenEditV2'] = true
+				this.openSwitch[productId]['isOpenEdit'] = false
+				
+				let templateLists = this.templateLists;
+				let productView = this.productView;
+				templateLists.forEach(function(systems, index1) {
+					systems['systems'].forEach(function(prods, index2) {
+						prods['prods'].forEach(function(item, index3) {
+							if(item['productId'] == productId){
+								let price = productView[key]['prods'][k]['productPrice'];
+								templateLists[index1]['systems'][index2]['prods'][index3]['productPrice'] = parseFloat(price);
+								let totalPrice = parseFloat(price) * parseInt(item['productNum']);
+								templateLists[index1]['systems'][index2]['prods'][index3]['totalPrice'] = totalPrice;
+							}
+						})
+					})
+				});
+				this.templateLists = templateLists;
+				this.handelProductView();
+				this.getCalculateTPrice();
+				
+			},
+			editShowPriceV2(productId){
+				this.openSwitch[productId]['changePrice'] = true;
+				this.openSwitch[productId]['isOpenEditV2'] = false;
+				let ref = "changePrice"+productId;
+				let array = this.$refs;
+				array[ref][0].focus()
+				this.$nextTick(function(){
+					array[ref][0].focus()
+				});
+			},
+			//点击添加备注
+			openRemark(productId){
+				this.openSwitch[productId]['isRemark'] = true;
+				let ref = "remark"+productId;
+				let array = this.$refs;
+				array[ref][0].focus()
+				this.$nextTick(function(){
+					array[ref][0].focus()
+				});
+			},
+			addRemark(key,k,productId){
+				this.openSwitch[productId]['isRemark'] = false;
+				let templateLists = this.templateLists;
+				let productView = this.productView;
+				templateLists.forEach(function(systems, index1) {
+					systems['systems'].forEach(function(prods, index2) {
+						prods['prods'].forEach(function(item, index3) {
+							if(item['productId'] == productId){
+								item['remark'] = productView[key]['prods'][k]['remark'];
+							}
+						})
+					})
+				});
+				this.templateLists = templateLists;
+				console.log(this.templateLists)
 			}
 		}
 	}
@@ -822,13 +990,17 @@
 		list-style: none;
 		text-decoration: none;
 	}
-
 	#designDetail .el-drawer {
 		position: static !important;
-	}
-
+	}	
 	#designDetail .has-gutter .el-table-column--selection .cell {
 		display: none;
+	}
+	.edit_input .el-input__inner{
+		height: 30px !important;
+	}
+	.remark_div .el-input__inner{
+		height: 90px !important;
 	}
 </style>
 <style scoped>

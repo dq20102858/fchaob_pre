@@ -1179,7 +1179,7 @@
 	text-decoration: line-through;
 	color: #d5d7e1;
 	margin-top: 20px;
-	display: inline-block
+	display: block
 }
 
 .room_detail .r_ep .line2{
@@ -1187,7 +1187,14 @@
     line-height: 20px;
     color: #18181c;
 	margin-top: 20px;
-	display: inline-block;
+	display: block;
+}
+.room_detail .r_ep .line3{
+    font-size: 14px;
+    line-height: 20px;
+    color: #18181c;
+	margin-top: 10px;
+	display: block;
 }
 .r_n ,.d_ep .productPrice {
 	line-height: 20px;
@@ -1225,3 +1232,16 @@
 .exchage_input{
 	width: 60%;
 }
+.edit_input {
+	width: 85px;    
+	margin: 10px auto 0 auto
+}
+
+.remark_span{
+	font-size: 14px;
+	color: #9092a5;
+	display: block;
+	margin-top: -33px;
+	cursor: pointer;
+}
+
