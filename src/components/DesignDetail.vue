@@ -341,7 +341,7 @@
 				<div class="fixed_btn">
 					<el-button class="fixed_btn_left" @click="goBack">返回首页</el-button>
 					<p class="fixed_total">总计</p>
-					<p class="fixed_price">{{allPrice}}</p>
+					<p class="fixed_price">{{this.allPrice}}</p>
 					<!-- <p class="fixed_space">调整空间</p> -->
 					<el-button type="primary" class="fixed_btn_right">生成方案</el-button>
 				</div>
@@ -430,10 +430,11 @@
 				let calculateTPrice = this.calculateTPrice;
 				for (let i = 0; i < this.servicePriceLists.length; i++) {
 					let price = parseFloat(this.servicePriceLists[i]['percent'] / 100);
-					this.servicePriceLists[i]['serviceItemPrice'] = price * calculateTPrice;
+					this.servicePriceLists[i]['serviceItemPrice'] = parseFloat( price * calculateTPrice).toFixed(2);
 					let oneServicePrice = this.servicePriceLists[i]['serviceItemPrice'];
 					this.servicePrice += oneServicePrice;
 				}
+				this.servicePrice = parseFloat(this.servicePrice).toFixed(2);
 			},
 			handleChange(key, k, o) {
 				//数量改变时的操作
@@ -629,11 +630,11 @@
 				}
 
 				this.initServicePriceList(); //计算服务费
-				this.allPrice = this.discountPrice + this.servicePrice;
+				this.allPrice = parseFloat(this.discountPrice) + parseFloat(this.servicePrice);
 
-				this.calculateTPrice = this.calculateTPrice.toFixed(2);
-				this.discountPrice = this.discountPrice.toFixed(2);
-				this.allPrice = this.allPrice.toFixed(2);
+				this.calculateTPrice = parseFloat(this.calculateTPrice).toFixed(2);
+				this.discountPrice = parseFloat(this.discountPrice).toFixed(2);
+				this.allPrice = parseFloat(this.allPrice).toFixed(2);
 			},
 			//打开调价
 			openEdit() {
@@ -963,6 +964,7 @@
 					array[ref][0].focus()
 				});
 			},
+			//添加备注内容
 			addRemark(key,k,productId){
 				this.openSwitch[productId]['isRemark'] = false;
 				let templateLists = this.templateLists;
@@ -977,7 +979,6 @@
 					})
 				});
 				this.templateLists = templateLists;
-				console.log(this.templateLists)
 			}
 		}
 	}
