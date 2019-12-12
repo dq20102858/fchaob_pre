@@ -70,6 +70,11 @@ export default {
 	// watch: {
 	//     templateLists : 'handelProductView' // 值可以为methods的方法名
 	// },
+	  destroyed() {
+	   this.$nextTick(function() {
+		this.$refs.scroll.addEventListener("scroll", this.handleScroll, true)
+	   });
+	  },
 	methods: {
 		//计算初始服务费
 		initServicePriceList() {
