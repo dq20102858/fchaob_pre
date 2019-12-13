@@ -70,11 +70,11 @@ export default {
 	// watch: {
 	//     templateLists : 'handelProductView' // 值可以为methods的方法名
 	// },
-	  destroyed() {
-	   this.$nextTick(function() {
-		this.$refs.scroll.addEventListener("scroll", this.handleScroll, true)
-	   });
-	  },
+	 //  destroyed() {
+	 //   this.$nextTick(function() {
+		// this.$refs.scroll.addEventListener("scroll", this.handleScroll, true)
+	 //   });
+	 //  },
 	methods: {
 		//计算初始服务费
 		initServicePriceList() {
@@ -113,7 +113,7 @@ export default {
 
 		getListCompanyTopProductCatalog() {
 			getProductCate().then(response => {
-				var data = response.data.data
+				var data = response.data
 				if (data) {
 					this.productLists = data;
 					this.curSysName = this.productLists[0]['name'];
@@ -127,7 +127,7 @@ export default {
 		//获取模板房间视图的数据
 		getNxTemplateDetail() {
 			getTemplateDetail(this.id).then(response => {
-				var data = response.data.data
+				var data = response.data
 				let spaces = [];
 				if (data) {
 					this.templateLists = data.spaces;
@@ -167,7 +167,7 @@ export default {
 
 		getPageProduct4Select() {
 			getPageProduct4Select(this.selectPage, this.cateId, this.selectKeywords).then(response => {
-				var data = response.data.data
+				var data = response.data
 				if (data.data.length > 0) {
 					// this.selectedLists = data.data;
 					this.selectedLists.push.apply(this.selectedLists, data.data);
@@ -342,7 +342,7 @@ export default {
 		},
 		getCustomersPages4User() {
 			getCustomersPages(this.customerPage, this.customerKeywords).then(response => {
-				var data = response.data.data
+				var data = response.data
 				if (data) {
 					this.customersPages = data;
 					this.customersPages['current_page'] = parseInt(data.current_page);

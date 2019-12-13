@@ -1,0 +1,57 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#login{
+	width: 90%;
+	min-width: 1180px;
+	margin: 0 auto;
+}
+#login .header{
+	height: 250px;
+}
+#login .header .header_wapper{
+	margin: 0 auto;
+	line-height: 250px;
+	text-align: center;
+	padding: 70px
+}
+#login .header .header_wapper h1{
+	font-size: 30px;
+	color: #92576d;
+}
+#login .main{
+	width: 100%;
+}
+#login .main .login_box{
+	width: 504px;
+	background-color: #fff;
+	box-sizing: border-box;
+	padding: 40px 48px 50px;
+	text-align: left;
+	margin: 24px auto 40px;
+}
+
+#login .main .login_box h3{
+	font-size: 16px;
+	color: #18181c;
+	line-height: 22px;
+	font-weight: 500;
+	margin-bottom: 24px;
+}
+#login .main .login_box .line{
+	display: block;
+	font-size: 12px;
+}
+.forgetPassword{
+	color:rgba(24,24,28,.75);
+	float: left;
+}
+.register{
+	color: #4c89fb;
+	background-color: transparent;
+	border-color: transparent;
+	box-shadow: none;
+	float: right;
+}

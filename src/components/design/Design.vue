@@ -4,14 +4,14 @@
 		<el-header class="main_header">纳新科技</el-header>
 		<el-main class="main_contain">
 			<el-main id="main_pic">
-				<img src="../../../static/imgs/banner.a8036ca.jpg" class="image">
+				<img src="../../assets/imgs/banner.a8036ca.jpg" class="image">
 			</el-main>
 			<el-main id="sys_pro">
 				<h3>系统方案</h3>
 				<el-row>
 					<el-col v-for="(o, index) in 4" :key="o">
 						<el-card shadow="hover" @click.native="goDescribe">
-							<img src="../../../static/imgs/index_home.a5a5a62.jpg" class="image">
+							<img src="../../assets/imgs/index_home.a5a5a62.jpg" class="image">
 							<div class="sys_font">
 								<span>好吃的汉堡</span>
 							</div>
@@ -59,11 +59,11 @@
 			},
 			getTempleteList(){
 				getTempleteListsApi().then(response => {
-				    var data = response.data.data
+				    var data = response.data
 				    if(data){		        		        	
 				    	this.templates =data
 				    }else{
-				    	alert(response.data.msg)
+				    	alert(response.msg)
 				    }
 				}).catch(err => {
 					console.log(err)
@@ -79,5 +79,5 @@
 	}
 </style>
 <style scoped>
-	@import '../../../static/css/design.css';
+	@import '../../assets/css/design.css';
 </style> 

@@ -376,5 +376,5 @@
 	}
 </style>
 <style scoped>
-	@import '../../../static/css/design_detail.css';
+	@import '../../assets/css/design_detail.css';
 </style>
