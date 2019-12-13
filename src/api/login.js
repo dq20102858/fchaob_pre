@@ -17,3 +17,12 @@ return request({
     params:{id}
   })
 }
+
+export function logout(id) {
+	
+return request({
+    url: '/login/logout',
+    method: 'get',
+    params:{id}
+  })
+}

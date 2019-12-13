@@ -1,6 +1,18 @@
 <template>
 	<el-container>
-		<el-header class="main_header"></el-header>
+		<el-header class="main_header">
+			<div class="user_info">
+				<el-dropdown trigger="click">
+					<span class="el-dropdown-link">
+					<el-avatar size="small" :src="circleUrl"></el-avatar>
+					</span>
+				  <el-dropdown-menu slot="dropdown">
+				    <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
+				  </el-dropdown-menu>
+				</el-dropdown>
+			</div>
+			
+		</el-header>
 		<el-container>
         <el-aside width="200px">
 			<el-menu :default-openeds="['1', '3']">
@@ -24,11 +36,23 @@
 <script>
 export default {
 	name: 'home',
+	data(){
+		return {
+			circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",				
+		}
+	},
 	methods: {
 		goDesign(index, row) {
 			//跳转到模板选择页
 			let routerJump = this.$router.resolve({path:"/design"});
 			window.open(routerJump.href,"_blank");
+		},
+		logout(){
+			console.log(121)
+			this.$store.dispatch('user/logout').then(() => {
+				console.log(11)
+			  location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+			})
 		}
 		
 	}
@@ -50,12 +74,24 @@ export default {
 	box-shadow: 0 2px 4px 0 rgba(24,24,28,.2);
 	z-index: 9
   }
+ 
+.popper__arrow{
+	  /* left:30px !important; */
+  }
+.el-popper{
+	  margin-top: -10px !important;
+  }
   .sub_header{
 	  background-color: #fff;
 	  color: #333;
 	  text-align: center;
 	  line-height: 48px;
 	  height: 48px !important;
+  }
+  .user_info{
+	width: 50px;
+	float: right;
+	margin-top: 10px
   }
   .el-aside {
     background-color: #f0f2f5;

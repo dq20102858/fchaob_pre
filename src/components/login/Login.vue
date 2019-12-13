@@ -60,9 +60,9 @@
 							this.$store.dispatch('user/login', this.loginInfo).then(() => {
 								this.$router.push({path:"/home"});
 								this.loading = false
-							  }).catch(() => {
-							    this.loading = false
-							  })
+							}).catch(() => {
+								this.loading = false
+						    })
 						} else {
 							return false;
 						}
