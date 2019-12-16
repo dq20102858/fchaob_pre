@@ -17,8 +17,8 @@
 					</el-form-item>
 					<el-form-item>
 					    <el-button type="primary" @click="login">登录</el-button>
-						<span class="line forgetPassword">忘记密码?</span>
-						<span class="line register">立即注册</span>
+						<span class="line forgetPassword" @click="forgetPassword">忘记密码?</span>
+						<span class="line register" @click="goRegister">立即注册</span>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -70,8 +70,14 @@
 				// }).catch(err => {
 				// 	console.log(err)
 				// })
+			},
+			goRegister() {
+				//跳转到注册页
+				this.$router.push({ name: 'register'});
+			},
+			forgetPassword(){
+				this.$router.push({ name: 'forgetPassword'});
 			}
-
 		}
 	}
 </script>
@@ -94,6 +100,9 @@
 	}
 	#login .login_box .el-form-item{
 		margin-bottom: 40px;
+	}
+	#login .line{
+		cursor: pointer;
 	}
 	
 </style>

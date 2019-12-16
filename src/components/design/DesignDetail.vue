@@ -368,7 +368,7 @@
 	#designDetail .has-gutter .el-table-column--selection .cell {
 		display: none;
 	}
-	.edit_input .el-input__inner{
+	#designDetail .edit_input .el-input__inner{
 		height: 30px !important;
 	}
 	.remark_div .el-input__inner{

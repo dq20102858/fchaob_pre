@@ -4,18 +4,26 @@ import Design from '@/components/design/Design.vue'
 import DesignDetail from '@/components/design/DesignDetail.vue'
 import Home from '@/components/home/Home.vue'
 import Login from '@/components/login/Login.vue'
+import Register from '@/components/login/Register.vue'
+import ForgetPassword from '@/components/login/ForgetPassword.vue'
 
 Vue.use(Router)
 
-const routerPush = Router.prototype.push
-Router.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error=> error)
-}
 export const constantRoutes = [
  {
    path: '/login',
    name: 'login',
    component: Login
+ },
+ {
+    path: '/register',
+    name: 'register',
+    component: Register
+  },
+  {
+   path: '/forgetPassword',
+   name: 'forgetPassword',
+   component: ForgetPassword
  },
 ]
 
@@ -24,24 +32,25 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-	{
-	    path: '/home',
-	    name: 'home',
-	    component: Home
-	  },
-	{
-	  path: '/design',
-	  name: 'design',
-	  component: Design
-	},
-	{
-	  path: '/designDetail',
-	  name: 'designDetail',
-	  component: DesignDetail
-	},
- 
+	 {
+	     path: '/home',
+	     name: 'home',
+	     component: Home
+	   },
+	 {
+	   path: '/design',
+	   name: 'design',
+	   component: Design
+	 },
+	 {
+	   path: '/designDetail',
+	   name: 'designDetail',
+	   component: DesignDetail
+	 },
+	 
+	 { path: '*', redirect: '/404', hidden: true }
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  
 ]
 
 const createRouter = () => new Router({

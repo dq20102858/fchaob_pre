@@ -1,4 +1,5 @@
 <template>
+	<div id="home">
 	<el-container>
 		<el-header class="main_header">
 			<div class="user_info">
@@ -26,11 +27,16 @@
 		</el-aside>
 		<el-main>
 			<el-header class="sub_header">
-				
+				<span class="breadcrumb">首页</span>
 			</el-header>
+			<div class="main_div">
+				<div class="main_background">欢迎光临</div>
+			</div>
+			
 		</el-main>
 		</el-container>
 	</el-container>
+	</div>
 </template>
 
 <script>
@@ -48,9 +54,7 @@ export default {
 			window.open(routerJump.href,"_blank");
 		},
 		logout(){
-			console.log(121)
 			this.$store.dispatch('user/logout').then(() => {
-				console.log(11)
 			  location.reload()// In order to re-instantiate the vue-router object to avoid bugs
 			})
 		}
@@ -65,7 +69,7 @@ export default {
 	margin: 0;
 	padding: 0;
 }
-.main_header, .el-footer {
+#home .main_header, .el-footer {
     background-color: #fff;
     color: #333;
     text-align: center;
@@ -75,25 +79,25 @@ export default {
 	z-index: 9
   }
  
-.popper__arrow{
+#home .popper__arrow{
 	  /* left:30px !important; */
   }
-.el-popper{
+#home .el-popper{
 	  margin-top: -10px !important;
   }
-  .sub_header{
+ #home .sub_header{
 	  background-color: #fff;
 	  color: #333;
 	  text-align: center;
 	  line-height: 48px;
 	  height: 48px !important;
   }
-  .user_info{
+ #home .user_info{
 	width: 50px;
 	float: right;
 	margin-top: 10px
   }
-  .el-aside {
+ #home .el-aside {
     background-color: #f0f2f5;
     color: #333;
     text-align: center;
@@ -102,30 +106,46 @@ export default {
 	height: calc(100vh - 48px);
 	
   }
-  .el-main {
+#home  .el-main {
     background-color: #f0f2f5;
-	padding: 0;
+	padding: 0 !important;
   }
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
+
+ #home .el-container:nth-child(5) .el-aside,
+ #home .el-container:nth-child(6) .el-aside {
     line-height: 260px;
   }
-  .el-container:nth-child(7) .el-aside {
+ #home .el-container:nth-child(7) .el-aside {
     line-height: 320px;
   }
-  .el-menu{
+#home  .el-menu{
 	  text-align: left;
 	  height: 100%;
   }
-  .el-menu-item{
+ #home .el-menu-item{
   	min-width: 190px !important;
   	margin-left: 10px;
   }
-  .el-menu-item-group__title{
+ #home .el-menu-item-group__title{
 	  padding: 0;
+  }
+  #home .breadcrumb{
+	  display: block;
+	  width: 50px;
+	  font-weight: 999;
+  }
+  #home .main_div{
+	width: 100%;
+	height: calc(100vh - 96px);
+	position: relative;
+  }
+  #home .main_div .main_background{
+	  width: 100%;
+	  text-align: center;
+	  position: absolute;
+	  top: 40%;
+	  font-size: 60px;
+	  color: #cccccc;
   }
   
 </style>
