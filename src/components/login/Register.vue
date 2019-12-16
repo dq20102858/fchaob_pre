@@ -18,8 +18,8 @@
 				  <el-form-item label="密码" prop="password">
 				    <el-input v-model="register.password" placeholder="请输入密码" show-password @blur="checkForm"></el-input>
 				  </el-form-item>
-				  <el-form-item label="城市" prop="area" ref="distpicker">
-					<v-distpicker v-model="register.area" @province="setProvince" @city="setCity" @area="setArea"  @selected="checkForm"></v-distpicker>
+				  <el-form-item label="城市" prop="areaCode" ref="distpicker">
+					<v-distpicker v-model="register.areaCode" @province="setProvince" @city="setCity" @area="setArea"  @selected="checkForm"></v-distpicker>
 				  </el-form-item>
 				  <el-form-item label="公司名称" prop="company_name">
 				    <el-input v-model="register.company_name" placeholder="请输入公司名称" @blur="checkForm"></el-input>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import {register} from '@/api/login'
 export default {
 	name: 'register',
 	data(){
@@ -61,10 +62,18 @@ export default {
 		}
 		return{
 			register:{
-				province:"",
-				city:"",
-				area:""
-				
+				provinceCode:"",
+				cityCode:"",
+				areaCode:"",
+				provinceName:"",
+				cityName:"",
+				areaName:"",
+				name:"",
+				phone:"",
+				sms:"",
+				password:"",
+				company_type:"",
+				company_name:""
 			},
 			rules:{
 				name: [
@@ -81,7 +90,7 @@ export default {
 					{ required: true, message: '请输入密码', trigger: 'blur' },
 					{ pattern: /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/, message: '密码必须包含大写字母、小写字母和数字，长度在6-16位之间', trigger: 'blur'  } 
 				],
-				area: [
+				areaCode: [
 					{ required: true, message: '请选择地区', trigger: 'blur' },
 				],
 				company_type: [
@@ -99,27 +108,41 @@ export default {
 			
 		},
 		submitForm(){
-			
+			register(this.register).then(response => {
+				if(response.status){
+					this.$router.push({path:"/login"});
+				}else{
+					this.$message.error('注册失败，请稍后再试');
+				}
+			}).catch(err => {
+				console.log(err)
+			})
 		},
 		setProvince(data){
 			if(typeof(data.code) == "undefined"){
 				this.register.province = 0
+				this.register.provinceName = ""
 			}else{
 				this.register.province = data.code
+				this.register.provinceName = data.value
 			}
 		},
 		setCity(data){
 			if(typeof(data.code) == "undefined"){
-				this.register.city = 0
+				this.register.cityCode = 0
+				this.register.cityName = ''
 			}else{
-				this.register.city = data.code
+				this.register.cityCode = data.code
+				this.register.cityName = data.value
 			}
 		},
 		setArea(data){
 			if(typeof(data.code) == "undefined"){
-				this.register.area = 0
+				this.register.areaCode = 0
+				this.register.areaName = ""
 			}else{
-				this.register.area = data.code
+				this.register.areaCode = data.code
+				this.register.areaName = data.value
 			}
 			
 		},
