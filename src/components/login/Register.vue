@@ -93,6 +93,9 @@ export default {
 				areaCode: [
 					{ required: true, message: '请选择地区', trigger: 'blur' },
 				],
+				company_name: [
+					{ required: true, message: '请输入公司名称', trigger: 'blur' },
+				],
 				company_type: [
 					{ required: true, message: '请选择公司类型', trigger: 'change' },
 				],
