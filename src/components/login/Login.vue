@@ -10,7 +10,7 @@
 				<h3>用户登录</h3>
 				<el-form  :rules="loginRule"  :model="loginInfo" ref="login">
 					<el-form-item  prop="phoneOrEmail">
-						<el-input placeholder="手机号/邮箱"  prefix-icon="el-icon-user" v-model="loginInfo.phoneOrEmail"></el-input>
+						<el-input placeholder="手机号"  prefix-icon="el-icon-user" v-model="loginInfo.phoneOrEmail"></el-input>
 					</el-form-item>
 					<el-form-item  prop="password">
 						<el-input placeholder="请输入密码"  prefix-icon="el-icon-goods"   show-password v-model="loginInfo.password"></el-input>

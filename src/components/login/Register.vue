@@ -21,11 +21,11 @@
 				  <el-form-item label="城市" prop="areaCode" ref="distpicker">
 					<v-distpicker v-model="register.areaCode" @province="setProvince" @city="setCity" @area="setArea"  @selected="checkForm"></v-distpicker>
 				  </el-form-item>
-				  <el-form-item label="公司名称" prop="company_name">
-				    <el-input v-model="register.company_name" placeholder="请输入公司名称" @blur="checkForm"></el-input>
+				  <el-form-item label="公司名称" prop="companyName">
+				    <el-input v-model="register.companyName" placeholder="请输入公司名称" @blur="checkForm"></el-input>
 				  </el-form-item>
-				  <el-form-item label="公司类型" prop="company_type">
-					   <el-select v-model="register.company_type" placeholder="请选择公司类型"  @change="checkForm">
+				  <el-form-item label="公司类型" prop="companyType">
+					   <el-select v-model="register.companyType" placeholder="请选择公司类型"  @change="checkForm">
 					      <el-option  key="1" label="意向伙伴" value="1"></el-option>
 					      <el-option  key="2" label="家装公司" value="2"></el-option>
 					      <el-option  key="3" label="设计师" value="3"></el-option>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import {register} from '@/api/login'
+import {register , getSendSms} from '@/api/login'
 export default {
 	name: 'register',
 	data(){
@@ -72,8 +72,8 @@ export default {
 				phone:"",
 				sms:"",
 				password:"",
-				company_type:"",
-				company_name:""
+				companyType:"",
+				companyName:""
 			},
 			rules:{
 				name: [
@@ -93,10 +93,10 @@ export default {
 				areaCode: [
 					{ required: true, message: '请选择地区', trigger: 'blur' },
 				],
-				company_name: [
+				companyName: [
 					{ required: true, message: '请输入公司名称', trigger: 'blur' },
 				],
-				company_type: [
+				companyType: [
 					{ required: true, message: '请选择公司类型', trigger: 'change' },
 				],
 			},
@@ -108,14 +108,25 @@ export default {
 	
 	methods: {
 		getSms(){
-			
+			getSendSms(this.register['phone']).then(response => {
+				
+			}).catch(err => {
+				console.log(err)
+			})
 		},
 		submitForm(){
 			register(this.register).then(response => {
 				if(response.status){
-					this.$router.push({path:"/login"});
+					this.$message({
+						message: '注册成功',
+						type: 'success'
+					});
+					setTimeout(function(that){
+						that.$router.push({path:"/login"});
+					},4000,this)
+					
 				}else{
-					this.$message.error('注册失败，请稍后再试');
+					this.$message.error(response.msg);
 				}
 			}).catch(err => {
 				console.log(err)
@@ -123,10 +134,10 @@ export default {
 		},
 		setProvince(data){
 			if(typeof(data.code) == "undefined"){
-				this.register.province = 0
+				this.register.provinceCode = 0
 				this.register.provinceName = ""
 			}else{
-				this.register.province = data.code
+				this.register.provinceCode = data.code
 				this.register.provinceName = data.value
 			}
 		},
@@ -252,4 +263,5 @@ export default {
 	#register-form .el-select{
 		width: 100%;
 	}
+	
 </style>

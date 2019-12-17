@@ -57,7 +57,7 @@ const actions = {
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+          reject('登录失败')
         }
 
         commit('SET_ROLES', roles)

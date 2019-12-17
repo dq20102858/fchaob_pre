@@ -36,3 +36,28 @@ return request({
   })
 }
 
+export function getSendSms(phone) {
+	
+return request({
+    url: '/login/getSendSms',
+    method: 'get',
+	params:{ phone }
+  })
+}
+
+export function getVerify() {
+	
+return request({
+    url: '/common/verify',
+    method: 'get',
+  })
+}
+
+export function checkCaptcha(data) {
+	
+return request({
+    url: '/common/checkCaptcha',
+    method: 'post',
+    data
+  })
+}
