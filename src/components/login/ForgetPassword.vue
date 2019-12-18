@@ -25,23 +25,25 @@
 					 </div>
 					 <div v-else-if="step==2">
 						<el-form-item>
-						  <el-input v-model="sendForm.checkcode"  placeholder="请输入验证码" class="step2-code"></el-input>
+						  <el-input v-model="sendForm.smsCode"  placeholder="请输入验证码" class="step2-code"></el-input>
 						  <el-button type="primary" class="resend-btn" @click="sendMsg" :disabled="isDisabled" >{{buttonName}}</el-button>
+              <span class="error-tip" v-show="isError">{{errorMsg}}</span>
 						</el-form-item>
 						<el-form-item>
-						   <el-button type="primary"  class="next-btn">下一步</el-button>
+						   <el-button type="primary"  class="next-btn" @click="step2">下一步</el-button>
 						 </el-form-item>
 					</div>
 					<div v-else-if="step==3">
-						<el-form-item >
+						<el-form-item prop="password">
 						  <el-input v-model="sendForm.password" placeholder="请输入新密码" show-password></el-input>
 						</el-form-item>
 						<el-form-item>
-						   <el-button type="primary"  class="next-btn">下一步</el-button>
+						   <el-button type="primary"  class="next-btn" @click="changePassword">下一步</el-button>
 						 </el-form-item>
 					</div>
-					<div v-else style="text-align: center;font-size: 35px;color: #903030;">
-						<span>重置密码成功</span>
+					<div v-else >
+						<span class="step4-left">重置密码成功</span>
+            <span class="step4-right" @click="goLogin" style="cursor: pointer;">去登录>></span>
 					</div>
 				</el-form>
 			</div>
@@ -51,7 +53,7 @@
 </template>
 
 <script>
-  import {getVerify ,checkCaptcha} from '@/api/login'
+  import {getVerify ,checkCaptcha,getSendSms ,checkSmsCode,changePassword} from '@/api/login'
 export default {
 	name: 'forgetPassword',
 	data(){
@@ -63,13 +65,26 @@ export default {
     		callback();  // 一定要有，这是表单校验成功后的回调，会返回一个boolean值，即true
     	}
     }
+    var validateCaptcha = (rule, value, callback) => {
+      checkCaptcha(this.sendForm).then(response => {
+        if(response.status==1){
+          callback();
+        }else{
+          this.getVerify();
+          callback(new Error(response.msg))
+        }
+      }).catch(err => {
+      })
+    }
 		return{
 			active: 0,
-			step:2,
+			step:1,
       src:"http://jj-back.com/common/verify",
       isDisabled:false,
       buttonName: "重新发送",
-      time: 10,
+      time: 60,
+      isError:false,
+      errorMsg:"",
 			sendForm:{},
 			rules:{
 				phone:[
@@ -77,8 +92,13 @@ export default {
           { validator: validatePhone, trigger: 'blur'}
 				],
 				checkcode:[
-					{ required: true, message: '请输入验证码', trigger: 'blur' }
-				]
+					{ required: true, message: '请输入验证码', trigger: 'blur' },
+          { validator: validateCaptcha, trigger: 'blur'}
+				],
+        password:[
+          { pattern: /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/, message: '密码必须包含大写字母、小写字母和数字，长度在6-16位之间', trigger: 'blur'  }
+
+        ]
 			}
 		}
 	},
@@ -88,45 +108,71 @@ export default {
       this.src = this.src+"?time="+new Date().getTime();;
     },
     step1(){
-          this.$refs["sendForm"].validate((valid) => {
-          	if (valid) {
-              checkCaptcha(this.sendForm).then(response => {
-                if(response.status==1){
-                  this.step = 2;
-                  this.active = 1;
-                  // this.sendMsg()
-                }else{
-                  this.getVerify();
-                }
-              }).catch(err => {
-              })
-          	} else {
-          		return false;
-          	}
-          });
+          this.step = 2;
+          this.active = 1;
+          this.sendMsg();
     },
     sendMsg() {
-    					let me = this;
-              console.log(me)
-    					me.isDisabled = true;
-    					let interval = window.setInterval(function() {
-    						me.buttonName = '重新发送（' + me.time + '秒）';
-    						--me.time;
-                console.log(me.time)
-    						if(me.time < 0) {
-    							me.buttonName = "重新发送";
-    							me.time = 10;
-    							me.isDisabled = false;
-    							window.clearInterval(interval);
-    						}
-    					}, 1000);
+      getSendSms(this.sendForm['phone']).then(response => {
 
-    				}
-  },
+      }).catch(err => {
+        console.log(err)
+      })
+        let me = this;
+        me.isDisabled = true;
+        let interval = window.setInterval(function() {
+          me.buttonName = '重新发送（' + me.time + 's）';
+          --me.time;
+          console.log(me.time)
+          if(me.time < 0) {
+            me.buttonName = "重新发送";
+            me.time = 60;
+            me.isDisabled = false;
+            window.clearInterval(interval);
+          }
+        }, 1000);
+    },
+    step2(){
+      checkSmsCode(this.sendForm).then(response => {
+        if(response.status==1){
+          this.step = 3;
+          this.active = 2;
+        }else{
+          this.isError = true;
+          this.errorMsg = response.msg;
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    changePassword(){
+      let data = {
+        password:this.sendForm.password,
+        phone:this.sendForm.phone
+      }
+      changePassword(data).then(response => {
+        if(response.status==1){
+          this.step = 4;
+          this.active = 3;
+        }else{
+          this.$message({
+						message: response.msg,
+						type: 'error'
+					})
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    goLogin(){
+    	this.$router.push({ name: 'login'});
+    },
+  }
+
 }
 </script>
 
-<style>
+<style >
 	*{
 		margin: 0;
 		padding: 0;
@@ -135,6 +181,9 @@ export default {
 	body{
 		background: #f5f6f6;
 	}
+  #forget-header {
+    height: 230px;
+  }
 	#forget-main .step{
 		width: 984px;
 		background: #ffffff;
@@ -170,15 +219,9 @@ export default {
 	}
 	#forgetForm .resend-btn{
 		width: 28%;
-    text-align: center;
-    font-size: 12px;
-    top: -1px;
-    position: relative
 	}
   #forgetForm .resend-btn span{
-    display: block;
-    position: relative;
-    left: -5px;
+    font-size: 12px
   }
   #forgetForm .code-left{
     width: 70%;
@@ -186,7 +229,25 @@ export default {
   }
   #forgetForm .code-right{
     width: 28%;
-    vertical-align: middle;
+    vertical-align: middle !important;
     height: 40px;
+  }
+  #forgetForm .error-tip{
+    display: block;
+    position: absolute;
+    font-size: 10px;
+    color: red;
+    top: 29px
+  }
+  #forgetForm .step4-left{
+    text-align: center;
+    font-size: 35px;
+    color: #903030;
+    display: block;
+  }
+  #forgetForm  .step4-right{
+    display: block;
+    color: #4C89FB;
+    float: right;
   }
 </style>

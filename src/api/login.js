@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 export function login(data) {
-	
+
 return request({
     url: '/login/index',
     method: 'post',
@@ -10,7 +10,7 @@ return request({
 }
 
 export function getInfo(id) {
-	
+
 return request({
     url: '/login/getUserInfo',
     method: 'get',
@@ -19,7 +19,7 @@ return request({
 }
 
 export function logout(id) {
-	
+
 return request({
     url: '/login/logout',
     method: 'get',
@@ -28,7 +28,7 @@ return request({
 }
 
 export function register(data) {
-	
+
 return request({
     url: '/login/register',
     method: 'post',
@@ -37,7 +37,7 @@ return request({
 }
 
 export function getSendSms(phone) {
-	
+
 return request({
     url: '/login/getSendSms',
     method: 'get',
@@ -46,7 +46,7 @@ return request({
 }
 
 export function getVerify() {
-	
+
 return request({
     url: '/common/verify',
     method: 'get',
@@ -54,10 +54,28 @@ return request({
 }
 
 export function checkCaptcha(data) {
-	
+
 return request({
     url: '/common/checkCaptcha',
     method: 'post',
     data
   })
 }
+export function checkSmsCode(data) {
+
+return request({
+    url: '/common/checkSmsCode',
+    method: 'post',
+    data
+  })
+}
+
+export function changePassword(data) {
+
+return request({
+    url: '/login/changePassword',
+    method: 'post',
+    data
+  })
+}
+
