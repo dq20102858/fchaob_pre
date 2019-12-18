@@ -79,7 +79,7 @@ export default {
 		return{
 			active: 0,
 			step:1,
-      src:"http://jj-back.com/common/verify",
+      src:"/common/verify",
       isDisabled:false,
       buttonName: "重新发送",
       time: 60,

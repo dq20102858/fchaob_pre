@@ -4,7 +4,7 @@ import store from '@/store'
 // create an axios instance
 const service = axios.create({
 //  baseURL: process.env.BASE_API, // api的base_url
-    baseURL: "http://jj-back.com", // api的base_url
+    baseURL: "http://fchaob.nething.com", // api的base_url
   timeout: 5000 // request timeout
 })
 
