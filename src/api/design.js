@@ -41,3 +41,10 @@ export function getCustomersPages(page,keyword) {
 		}
 	})
 }
+export function getSysList() {
+	return request({
+		url: 'design/getSysList',
+		method: 'get',
+	})
+}
+

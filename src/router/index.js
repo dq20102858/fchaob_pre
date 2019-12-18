@@ -6,6 +6,7 @@ import Home from '@/components/home/Home.vue'
 import Login from '@/components/login/Login.vue'
 import Register from '@/components/login/Register.vue'
 import ForgetPassword from '@/components/login/ForgetPassword.vue'
+import SysDetail from '@/components/design/SysDetail.vue'
 
 Vue.use(Router)
 
@@ -47,10 +48,14 @@ export const asyncRoutes = [
 	   name: 'designDetail',
 	   component: DesignDetail
 	 },
-	 
+  {
+	   path: '/sysDetail',
+	   name: 'sysDetail',
+	   component: SysDetail
+	 },
 	 { path: '*', redirect: '/404', hidden: true }
   // 404 page must be placed at the end !!!
-  
+
 ]
 
 const createRouter = () => new Router({
@@ -68,5 +73,3 @@ export function resetRouter() {
 }
 
 export default router
-
-

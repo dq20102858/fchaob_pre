@@ -9,11 +9,11 @@
 			<el-main id="sys_pro">
 				<h3>系统方案</h3>
 				<el-row>
-					<el-col v-for="(o, index) in 4" :key="o">
-						<el-card shadow="hover" @click.native="goDescribe">
-							<img src="../../assets/imgs/index_home.a5a5a62.jpg" class="image">
+					<el-col v-for="(item, key) in sysLists" :key="key">
+						<el-card shadow="hover" @click.native="goDescribe(item.id)">
+							<img v-bind:src="item.img" class="image">
 							<div class="sys_font">
-								<span>好吃的汉堡</span>
+								<span>{{item.title}}</span>
 							</div>
 						</el-card>
 					</el-col>
@@ -39,37 +39,60 @@
 </template>
 
 <script>
-	import { getTempleteListsApi } from '@/api/design'
+	import { getTempleteListsApi ,getSysList} from '@/api/design'
 	export default {
 		name: 'design',
 		data() {
 			return {
-				templates:[]
-			}		
+				templates:[],
+        sysLists:[]
+			}
 		},
 		created: function(){
 				this.getTempleteList()
+        this.getSysList()
 		},
 		methods:{
 			goProduct(id){
 				 this.$router.push({ name: 'designDetail' ,query:{id:id}});
 			},
-			goDescribe(){
-				
+			goDescribe(id){
+				let routerJump = this.$router.resolve({path:"/sysDetail",query:{id:id}});
+				window.open(routerJump.href,"_blank");
 			},
 			getTempleteList(){
 				getTempleteListsApi().then(response => {
 				    var data = response.data
-				    if(data){		        		        	
+				    if(data){
 				    	this.templates =data
 				    }else{
-				    	alert(response.msg)
+				    	this.$message({
+				    	  "type":"error",
+				    	  "message":response.msg
+				    	})
 				    }
 				}).catch(err => {
 					console.log(err)
 				})
-			}
+			},
+      getSysList(){
+      		getSysList().then(response => {
+      		    var data = response.data
+      		    if(data){
+      		    	this.sysLists =data
+      		    }else{
+                this.$message({
+                  "type":"error",
+                  "message":response.msg
+                })
+      		    }
+      		}).catch(err => {
+      			console.log(err)
+      		})
+      }
+
 		}
+
 	}
 </script>
 <style>
@@ -80,4 +103,4 @@
 </style>
 <style scoped>
 	@import '../../assets/css/design.css';
-</style> 
+</style>
