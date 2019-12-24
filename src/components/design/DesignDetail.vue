@@ -98,7 +98,7 @@
 										<div v-for="(onePro, o) in one.prods" :key="o">
 											<li class="d_p">
 												<img v-bind:src="onePro.productImageUrl">
-												<span class="product_name">{{onePro.productName}}</span>
+												<span class="product_name" :title="onePro.productName">{{onePro.productName}}</span>
 												<span class="specs">{{onePro.productSpecs}}</span>
 											</li>
 											<li class="d_n">
@@ -134,12 +134,12 @@
 								<ul class="room_detail" v-for="(one, k) in item.prods" :key="k">
 									<li class="r_p">
 										<img v-bind:src="one.productImageUrl">
-										<span class="product_name">{{one.productName}}</span>
+										<span class="product_name" :title="one.productName">{{one.productName}}</span>
 										<span class="specs">{{one.productSpecs}}</span>
 										<div class="spaceNums">
-											<span v-for="(o, kk) in one.spaceNums" :key="kk" >{{o.spaceName}} * {{o.num}}</span> 
+											<span v-for="(o, kk) in one.spaceNums" :key="kk" >{{o.spaceName}} * {{o.num}}</span>
 										</div>
-										
+
 									</li>
 									<li class="r_ep">
 										<span class="line1" v-show="openSwitch[one['productId']]['isShowOriginPrice']"> ¥{{one.orginPrice}} </span>
@@ -156,11 +156,11 @@
 											<span v-if="one.remark=='' || typeof(one.remark)=='undefined'">点击输入备注</span>
 											<span v-else>{{one.remark}}</span>
 										</div>
-										
+
 										<div class="remark_div" v-show="openSwitch[one['productId']]['isRemark']">
 											<el-input type="text" v-model="one.remark" @blur="addRemark(key,k,one.productId)" :ref="'remark'+one.productId" autofocus></el-input>
 										</div>
-										
+
 									</li>
 									<li class="r_o del_icon">
 										<span class="del" @click="delProductView(one.productId)">删除</span>
@@ -240,12 +240,12 @@
 						<div id="setInfo" class="user_container">
 							<div class="form">
 								<div class="form-item col-2">
-									<label class="label"><span class="required">*</span>客户名称</label> 
+									<label class="label"><span class="required">*</span>客户名称</label>
 									<input type="text" placeholder="请输入客户名称" maxlength="50" v-model="postCustomer.name">
 									<div class="tips" style="display: none;">请输入用户名</div>
 								</div>
 								<div class="form-item col-2">
-									<label class="label"><span class="required">*</span>联系电话 </label> 
+									<label class="label"><span class="required">*</span>联系电话 </label>
 									<input type="text" placeholder="请输入手机号码" v-model="postCustomer.phone">
 									<div class="tips" style="display: none;">请输入正确的手机号</div>
 								</div>
@@ -297,7 +297,7 @@
 						<el-button type="primary" size="small" @click="confirmPostCustomer">确定</el-button>
 					</div>
 				</el-dialog>
-				
+
 				<el-dialog title="替换" :visible.sync="isExchage">
 					<div class="exchange_search">
 						<el-select v-model="cateId" placeholder="请选择" @change="chageProductInput">
@@ -332,9 +332,9 @@
 						<el-button type="primary" size="small"  @click="confirmExchange">确定</el-button>
 					</div>
 				</el-dialog>
-				
+
 			</el-main>
-			
+
 		</el-container>
 		<div class="block">
 			<div class="content">
@@ -364,7 +364,7 @@
 	}
 	#designDetail .el-drawer {
 		position: static !important;
-	}	
+	}
 	#designDetail .has-gutter .el-table-column--selection .cell {
 		display: none;
 	}

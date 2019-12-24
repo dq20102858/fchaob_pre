@@ -288,7 +288,7 @@
 .item .spaces {
     padding-left: 10px;
 	/* position: absolute; */
-	will-change: transel-form; 
+	will-change: transel-form;
 	transel-form: translate3d(418px, 232px, 0px);
 }
 
@@ -395,7 +395,7 @@
     height: 8px;
     /* -webkit-transel-form:translateX(-50%) rotate(-45deg);
     transel-form:translateX(-50%) rotate(-45deg); */
-	
+
 	transform: rotate(-45deg) translateX(-50%);
 	-webkit-transform: rotate(-45deg) translateX(-50%);    /* for Chrome || Safari */
 	-moz-transform: rotate(-45deg) translateX(-50%);       /* for Firefox */
@@ -530,7 +530,7 @@
 	list-style: none;
 	width: 100%;
 	float: left;
-	
+
 }
 #inner_wapper .pro_url{
 	border: 1px solid #e8e8ef;
@@ -549,7 +549,7 @@
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	display: inline-block;	
+	display: inline-block;
 	border-right: 1px solid #e8e8ef
 }
 #inner_wapper .pro_left_name{
@@ -564,7 +564,7 @@
 	width: calc(100% - 152px);
 	display: inline-block;
 	margin-left: 152px;
-	
+
 }
 #inner_wapper ul .control_width {
 	width: calc(100% - 152px);
@@ -1153,6 +1153,10 @@
 	display: inline-block;
 	width: 150px;
 	text-align: left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor: pointer;
 }
 
 .room_detail .r_p .spaceNums{
@@ -1171,7 +1175,7 @@
 	left: 120px;
 	text-align: left;
 }
-.room_detail .r_ep{    
+.room_detail .r_ep{
 	font-size: 14px;
     line-height: 20px
 }
@@ -1233,7 +1237,7 @@
 	width: 60%;
 }
 .edit_input {
-	width: 85px;    
+	width: 85px;
 	margin: 10px auto 0 auto
 }
 
@@ -1244,4 +1248,3 @@
 	margin-top: -33px;
 	cursor: pointer;
 }
-

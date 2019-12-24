@@ -25,6 +25,14 @@
 #design_wapper	.image {
 		width: 100%;
 	}
+#design_wapper	.image-detail {
+		width: 100%;
+    height: 164px
+}
+#design_wapper	.image-detail2 {
+		width: 100%;
+    height: 150px
+}
 
 	#design h3,#sys_pro h3 {
 		border-bottom: 1px solid #e8e8ef;
@@ -50,5 +58,4 @@
 
 #design_wapper	.design_font {
 		padding: 0px 12px 12px 12px;
-		margin-top: -15px
 	}
