@@ -136,8 +136,8 @@
 										<img v-bind:src="one.productImageUrl">
 										<span class="product_name" :title="one.productName">{{one.productName}}</span>
 										<span class="specs">{{one.productSpecs}}</span>
-										<div class="spaceNums">
-											<span v-for="(o, kk) in one.spaceNums" :key="kk" >{{o.spaceName}} * {{o.num}}</span>
+										<div class="spaceNums" :title="one.spaceNumsStr">
+                      <span>{{one.spaceNumsStr}}</span>
 										</div>
 
 									</li>
@@ -238,37 +238,6 @@
 						</div>
 						<!--价格计算结束-->
 						<div id="setInfo" class="user_container">
-							<!-- <div class="form">
-								<div class="form-item col-2">
-									<label class="label"><span class="required">*</span>客户名称</label>
-									<input type="text" placeholder="请输入客户名称" maxlength="50" v-model="postCustomer.name">
-									<div class="tips" style="display: none;">请输入用户名</div>
-								</div>
-								<div class="form-item col-2">
-									<label class="label"><span class="required">*</span>联系电话 </label>
-									<input type="text" placeholder="请输入手机号码" v-model="postCustomer.phone">
-									<div class="tips" style="display: none;">请输入正确的手机号</div>
-								</div>
-								<div class="form-item act">
-									<a href="javascript:void(0)" class="btn" @click="openCustomers">
-										选择已有客户
-									</a>
-								</div>
-								<div class="form-item col-2">
-									<label class="label">户型</label>
-									<input maxlength="10" type="text" placeholder="请输入户型" v-model="postCustomer.houseType">
-								</div>
-								<div class="form-item col-2">
-									<label class="label">地址</label><input type="text" placeholder="请输入地址" maxlength="60" v-model="postCustomer.address">
-								</div>
-								<div class="form-item col-1">
-									<label class="label">方案设计</label><input type="text" placeholder="" v-model="postCustomer.design">
-								</div>
-								<div class="form-item col-1">
-									<label class="label">方案说明</label>
-									<textarea type="text" placeholder="方案说明" v-model="postCustomer.description"></textarea>
-								</div>
-							</div> -->
               <el-form :model="postCustomer" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="客户名称" prop="name" class="customer-line">
                   <el-input v-model="postCustomer.name"></el-input>

@@ -234,6 +234,8 @@ export default {
 								spaceName: systems['spaceName'],
 								num: item['productNum']
 							});
+              let str = systems['spaceName']+"X"+item['productNum'];
+              productListsTmp[productId]["spaceNumsStr"].push(str);
 							that.$set(productListsTmp[productId], "totalPrice", parseInt(productListsTmp[productId]["productTotalNum"]) *
 								item['productPrice']);
 
@@ -244,13 +246,14 @@ export default {
 								spaceName: systems['spaceName'],
 								num: item['productNum']
 							}];
+              let str = [systems['spaceName']+"X"+item['productNum']];
+							that.$set(productListsTmp[productId], "spaceNumsStr", str);
 							that.$set(productListsTmp[productId], "spaceNums", one);
 							that.$set(productListsTmp[productId], "systemId", prods['systemId']);
 							that.$set(productListsTmp[productId], "totalPrice", parseInt(productListsTmp[productId]["productTotalNum"]) *
 								item['productPrice']);
 						}
 					});
-
 					let systemId = prods['systemId'];
 					list[systemId] = {
 						systemName: prods['systemName'],
@@ -260,12 +263,14 @@ export default {
 				})
 			});
 			productListsTmp.forEach(function(prod, index) {
+        prod['spaceNumsStr'] = prod['spaceNumsStr'].join();
 				let systemId = prod['systemId'];
 				list[systemId]['prods'].push(prod);
 			});
 			list = list.filter(function(e) {
 				return e
 			});
+      console.log(list)
 			this.productView = list;
 		},
 		//删除产品
@@ -673,7 +678,8 @@ export default {
             customerPhone:this.postCustomer.phone,
             customerAddress:this.postCustomer.address,
             templateName:this.postCustomer.houseType,
-            customerId:this.postCustomer.id
+            customerId:this.postCustomer.id,
+            note:this.postCustomer.description
           };
           createPlan(data).then(response => {
             var data = response.data

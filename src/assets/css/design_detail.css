@@ -1165,11 +1165,15 @@
 .room_detail .r_p .spaceNums{
 	font-size: 14px;
 	color: #9092a5;
-	height: 40px;
 	position: absolute;
 	left: 120px;
 	top:33px;
 	text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 180px;
+  overflow: hidden;
+  cursor: pointer;
 }
 .room_detail .r_p  .specs,.d_p .specs{
 	font-size: 14px;
@@ -1259,4 +1263,3 @@
 .customer-line{
   width: 42% !important;
 }
-
