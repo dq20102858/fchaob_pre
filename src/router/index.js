@@ -7,6 +7,7 @@ import Login from '@/components/login/Login.vue'
 import Register from '@/components/login/Register.vue'
 import ForgetPassword from '@/components/login/ForgetPassword.vue'
 import SysDetail from '@/components/design/SysDetail.vue'
+import Transfer from '@/components/design/Transfer.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export const asyncRoutes = [
 	   path: '/sysDetail',
 	   name: 'sysDetail',
 	   component: SysDetail
+	 },
+   {
+	   path: '/transer',
+	   name: 'transer',
+	   component: Transfer
 	 },
 	 { path: '*', redirect: '/404', hidden: true }
   // 404 page must be placed at the end !!!

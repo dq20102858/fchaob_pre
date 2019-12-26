@@ -2,11 +2,20 @@ import {
 	getProductCate,
 	getTemplateDetail,
 	getPageProduct4Select,
-	getCustomersPages
+	getCustomersPages,
+  createPlan
 } from '@/api/design'
 export default {
 	name: 'designDetail',
 	data() {
+    var validatePhone = (rule, value, callback) => {
+    	var MobileRegex = /^((13)|(14)|(15)|(16)|(17)|(18)|(19))[0-9]{9}$/;
+    	if (!MobileRegex.test(value)) {
+    		callback(new Error('请输入正确的手机号'))  // 这里错误的信息只要调用callback回调函数，然后在函数里newerror填写错误信息即可
+    	} else {
+    		callback();  // 一定要有，这是表单校验成功后的回调，会返回一个boolean值，即true
+    	}
+    }
 		return {
 			id: this.$route.query.id,
 			drawer: false, //抽屉是否打开
@@ -57,7 +66,15 @@ export default {
 			productView: [], //产品视图
 			exchangeProd: [], //替换的产品信息
 			preProductId: 0, //替换前的产品id
-
+      rules:{
+				name: [
+					{ required: true, message: '请输入姓名', trigger: 'blur' },
+				],
+				phone: [
+					{ required: true, message: '请输入正确的手机号', trigger: 'blur' },
+					{ validator: validatePhone, trigger: 'blur'}
+				],
+       }
 
 		}
 	},
@@ -644,6 +661,32 @@ export default {
 				})
 			});
 			this.templateLists = templateLists;
-		}
+		},
+    submit(){
+      this.$refs["ruleForm"].validate((valid) => {
+      	if (valid) {
+          let data = {
+            spaces:this.templateLists,
+            templateId:this.id,
+            fees:this.servicePriceLists,
+            customerName:this.postCustomer.name,
+            customerPhone:this.postCustomer.phone,
+            customerAddress:this.postCustomer.address,
+            templateName:this.postCustomer.houseType,
+            customerId:this.postCustomer.id
+          };
+          createPlan(data).then(response => {
+            var data = response.data
+            if (data.status > 0) {
+
+            } else {
+
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      })
+    }
 	}
 }

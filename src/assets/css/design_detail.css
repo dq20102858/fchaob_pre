@@ -1105,6 +1105,9 @@
     height: 32px;
     line-height: 32px;
     color: #4c89fb;
+    width: 100px;
+    position: absolute;
+    left: 84%;
 }
 .del_icon{
 	cursor: pointer
@@ -1248,3 +1251,12 @@
 	margin-top: -33px;
 	cursor: pointer;
 }
+
+.demo-ruleForm .el-form-item{
+  float: left;
+  width: 100%;
+}
+.customer-line{
+  width: 42% !important;
+}
+

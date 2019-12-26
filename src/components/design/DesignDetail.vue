@@ -238,7 +238,7 @@
 						</div>
 						<!--价格计算结束-->
 						<div id="setInfo" class="user_container">
-							<div class="form">
+							<!-- <div class="form">
 								<div class="form-item col-2">
 									<label class="label"><span class="required">*</span>客户名称</label>
 									<input type="text" placeholder="请输入客户名称" maxlength="50" v-model="postCustomer.name">
@@ -268,8 +268,33 @@
 									<label class="label">方案说明</label>
 									<textarea type="text" placeholder="方案说明" v-model="postCustomer.description"></textarea>
 								</div>
-							</div>
-						</div>
+							</div> -->
+              <el-form :model="postCustomer" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="客户名称" prop="name" class="customer-line">
+                  <el-input v-model="postCustomer.name"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="phone" class="customer-line">
+                  <el-input v-model="postCustomer.phone"></el-input>
+                </el-form-item>
+                <div class="form-item act">
+                	<a href="javascript:void(0)" class="btn" @click="openCustomers">
+                		选择已有客户
+                	</a>
+                </div>
+                <el-form-item label="户型" prop="houseType" class="customer-line">
+                  <el-input v-model="postCustomer.houseType"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="address" class="customer-line">
+                  <el-input v-model="postCustomer.address"></el-input>
+                </el-form-item>
+                <el-form-item label="方案设计" prop="design">
+                  <el-input v-model="postCustomer.design"></el-input>
+                </el-form-item>
+                <el-form-item label="方案说明" prop="description">
+                  <el-input v-model="postCustomer.description"  type="textarea"></el-input>
+                </el-form-item>
+                </el-form>
+            </div>
 						<div style="clear: both;"></div>
 					</div>
 				</div>
@@ -343,7 +368,7 @@
 					<p class="fixed_total">总计</p>
 					<p class="fixed_price">{{this.allPrice}}</p>
 					<!-- <p class="fixed_space">调整空间</p> -->
-					<el-button type="primary" class="fixed_btn_right">生成方案</el-button>
+					<el-button type="primary" class="fixed_btn_right" @click="submit">生成方案</el-button>
 				</div>
 			</div>
 		</div>
@@ -374,6 +399,9 @@
 	.remark_div .el-input__inner{
 		height: 90px !important;
 	}
+  .el-popup-parent--hidden{
+    padding: 0 !important;
+  }
 </style>
 <style scoped>
 	@import '../../assets/css/design_detail.css';

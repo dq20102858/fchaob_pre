@@ -48,3 +48,10 @@ export function getSysList() {
 	})
 }
 
+export function createPlan(data) {
+	return request({
+		url: 'design/createPlan',
+		method: 'post',
+    data
+	})
+}
