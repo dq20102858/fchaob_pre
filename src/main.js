@@ -8,6 +8,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './permission' // permission control
 
+
 import VueRouter from 'vue-router';
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -22,6 +23,8 @@ Vue.use(infiniteScroll)
 import VDistpicker from 'v-distpicker'
 Vue.component('v-distpicker', VDistpicker)
 
+import Icon from 'vue-svg-icon/Icon.vue';
+Vue.component('icon', Icon);
 
 /* eslint-disable no-new */
 new Vue({
