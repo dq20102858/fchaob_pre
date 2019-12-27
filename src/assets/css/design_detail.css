@@ -1266,3 +1266,39 @@
 .customer-line{
   width: 42% !important;
 }
+
+.user_container .selected {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 38px;
+    background: #f7f8fa;
+    padding: 0 24px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.user_container .selected .label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(24,24,28,.65);
+    margin-right: 8px;
+}
+.user_container .selected .name {
+    font-size: 14px;
+    color: #18181c;
+    font-weight: 500;
+    margin-right: 48px;
+}
+.user_container .selected .phone {
+    font-size: 14px;
+    color: #18181c;
+    font-weight: 500;
+    margin-right: 16px;
+}

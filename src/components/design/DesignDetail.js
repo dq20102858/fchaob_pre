@@ -710,6 +710,9 @@ export default {
 			});
 			this.templateLists = templateLists;
 		},
+    delPoster(){
+      this.postCustomer = {};
+    },
     submit(){
       this.$refs["ruleForm"].validate((valid) => {
       	if (valid) {
@@ -746,5 +749,6 @@ export default {
         }
       })
     }
+
 	}
 }

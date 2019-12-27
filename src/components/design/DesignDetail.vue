@@ -240,15 +240,27 @@
 						</div>
 						<!--价格计算结束-->
 						<div id="setInfo" class="user_container">
+              <div class="selected" v-show="postCustomer.id">
+                <div class="user-info">
+                  <span class="label">客户信息：</span>
+                  <span class="name">{{postCustomer.name}}</span>
+                  <span class="phone">{{postCustomer.phone}}</span>
+                  <a href="javascript:void(0)"  @click="delPoster" v-show="this.type=='system'">
+                    <i class="icon el-icon-error" style="font-size: 16px; color: rgb(213, 215, 227);"></i>
+                  </a>
+                </div>
+                <a href="javascript:void(0)" class="btn" @click="openCustomers" v-show="this.type=='system'">选择已有客户</a>
+              </div>
               <el-form :model="postCustomer" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="客户名称" prop="name" class="customer-line">
+                <el-form-item label="客户名称" prop="name" class="customer-line" v-show="!postCustomer.id">
                   <el-input v-model="postCustomer.name"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话" prop="phone" class="customer-line">
-                  <el-input v-model="postCustomer.phone"></el-input>
+                <el-form-item label="联系电话" prop="phone" class="customer-line" v-show="!postCustomer.id">
+                  <el-input v-model="postCustomer.phone" ></el-input>
                 </el-form-item>
+
                 <div class="form-item act">
-                	<a href="javascript:void(0)" class="btn" @click="openCustomers">
+                	<a href="javascript:void(0)" class="btn" @click="openCustomers" v-show="this.type=='system' && !postCustomer.id">
                 		选择已有客户
                 	</a>
                 </div>
