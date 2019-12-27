@@ -5,7 +5,10 @@
 		text-align: center;
 
 	}
-
+#design_wapper .iconzu11{
+  color: #FCC98C;
+  font-size: 50px;
+}
 #design_wapper	.main_contain {
 		background-color: #f0f2f5;
 		color: #333;

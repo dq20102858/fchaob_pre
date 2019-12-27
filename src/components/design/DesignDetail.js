@@ -3,7 +3,8 @@ import {
 	getTemplateDetail,
 	getPageProduct4Select,
 	getCustomersPages,
-  createPlan
+  createPlan,
+  getPlanDetail
 } from '@/api/design'
 export default {
 	name: 'designDetail',
@@ -18,6 +19,8 @@ export default {
     }
 		return {
 			id: this.$route.query.id,
+      planId:this.$route.query.planId,
+      type:this.$route.query.type,
 			drawer: false, //抽屉是否打开
 			isModal: false, //抽屉是否需要遮罩层
 			isEditPrice: false, //是否编辑价格
@@ -47,6 +50,7 @@ export default {
 			allPrice: 0,
 			discount: "", //折扣
 			discountPrice: 0,
+      originTotal:0,
 			servicePriceLists: [{
 				name: "服务费",
 				percent: 20,
@@ -96,10 +100,10 @@ export default {
 		//计算初始服务费
 		initServicePriceList() {
 			this.servicePrice = 0;
-			let calculateTPrice = this.calculateTPrice;
+			let discountPrice = this.discountPrice;
 			for (let i = 0; i < this.servicePriceLists.length; i++) {
-				let price = parseFloat(this.servicePriceLists[i]['percent'] / 100);
-				this.servicePriceLists[i]['serviceItemPrice'] = parseFloat(price * calculateTPrice).toFixed(2);
+				let discount = parseFloat(this.servicePriceLists[i]['percent'] / 100);
+				this.servicePriceLists[i]['serviceItemPrice'] = parseFloat(discount * discountPrice).toFixed(2);
 				let oneServicePrice = this.servicePriceLists[i]['serviceItemPrice'];
 				this.servicePrice += oneServicePrice;
 			}
@@ -134,52 +138,83 @@ export default {
 				if (data) {
 					this.productLists = data;
 					this.curSysName = this.productLists[0]['name'];
-				} else {
-
 				}
 			}).catch(err => {
 				console.log(err)
 			})
 		},
+    getPlanDetail(callback){
+      let id = this.planId
+      getPlanDetail(id).then(response => {
+      	if (response.status==1) {
+          this.templateLists = response.data.spaces;
+          let discount = parseFloat(response.data.finalProductPrice/response.data.productPrice).toFixed(2)*10;
+          if(discount<10){
+            this.discount = discount;
+            this.discountPriceShow = true;
+          }
+          this.postCustomer = {
+            name:response.data.customerName,
+            phone:response.data.customerPhone,
+            houseType:response.data.houseType,
+            address:response.data.customerAddress,
+            design:response.data.quoteCompanyName,
+            description:response.data.note,
+            id:response.data.customId,
+          };
+          callback(response.data.spaces,this)
+      	}
+      }).catch(err => {
+      	console.log(err)
+      })
+
+    },
+
+    getTmpDetailData(callback){
+      getTemplateDetail(this.id).then(response => {
+      	var data = response.data
+      	if (data) {
+      		this.templateLists = data.spaces;
+          callback(data.spaces,this)
+      	}
+      }).catch(err => {
+      	console.log(err)
+      })
+    },
+    handelTemplates(templateLists,_this){
+      let spaces = [];
+      let openSwitch = _this.openSwitch;
+      templateLists.forEach(function(systems, index) {
+      	systems['systems'].forEach(function(prods, index) {
+      		prods['prods'].forEach(function(item, index) {
+      			item['totalPrice'] = item['productNum'] * item['productPrice'];
+      			let productId = item['productId'];
+      			_this.$set(openSwitch, productId, {});
+      			_this.$set(openSwitch[productId], "changePrice", false);
+      			_this.$set(openSwitch[productId], "isOpenEdit", true);
+      			_this.$set(openSwitch[productId], "isOpenEditV2", false);
+      			_this.$set(openSwitch[productId], "isShowOriginPrice", false);
+      			_this.$set(openSwitch[productId], "isRemark", false);
+      		})
+      	})
+      	let one = {
+      		class: "", //控制选中样式
+      		name: systems['spaceName']
+      	}
+      	spaces.push(one);
+      });
+      _this.openSwitch = openSwitch;
+      _this.spaces = spaces;
+      _this.getCalculateTPrice();
+      _this.handelProductView();
+    },
 		//获取模板房间视图的数据
 		getNxTemplateDetail() {
-			getTemplateDetail(this.id).then(response => {
-				var data = response.data
-				let spaces = [];
-				if (data) {
-					this.templateLists = data.spaces;
-					let openSwitch = this.openSwitch;
-					let that = this;
-					this.templateLists.forEach(function(systems, index) {
-						systems['systems'].forEach(function(prods, index) {
-							prods['prods'].forEach(function(item, index) {
-								item['totalPrice'] = item['productNum'] * item['productPrice'];
-								let productId = item['productId'];
-								that.$set(openSwitch, productId, {});
-								that.$set(openSwitch[productId], "changePrice", false);
-								that.$set(openSwitch[productId], "isOpenEdit", true);
-								that.$set(openSwitch[productId], "isOpenEditV2", false);
-								that.$set(openSwitch[productId], "isShowOriginPrice", false);
-								that.$set(openSwitch[productId], "isRemark", false);
-							})
-						})
-						let one = {
-							class: "", //控制选中样式
-							name: systems['spaceName']
-						}
-						spaces.push(one);
-					});
-					this.openSwitch = openSwitch;
-					this.spaces = spaces;
-					this.getCalculateTPrice();
-					this.handelProductView();
-					// console.log(this.templateLists);
-				} else {
-
-				}
-			}).catch(err => {
-				console.log(err)
-			})
+      if(this.type == "edit"){
+        this.getPlanDetail(this.handelTemplates);
+      }else{
+        this.getTmpDetailData(this.handelTemplates);
+      }
 		},
 
 		getPageProduct4Select() {
@@ -270,7 +305,6 @@ export default {
 			list = list.filter(function(e) {
 				return e
 			});
-      console.log(list)
 			this.productView = list;
 		},
 		//删除产品
@@ -291,11 +325,13 @@ export default {
 		},
 		getCalculateTPrice() {
 			//计算总价
-			let totalPrice = 0;
+			let totalPrice  = 0;
+      let originTotal = 0;
 			this.templateLists.forEach(function(systems, index) {
 				systems['systems'].forEach(function(prods, index) {
 					prods['prods'].forEach(function(item, index) {
 						totalPrice += item['productNum'] * item['productPrice'];
+            // originTotal += item['productNum'] * item['orginPrice'];
 					})
 				})
 			});
@@ -576,6 +612,13 @@ export default {
 					})
 				})
 			});
+      this.openSwitch[exchageProd['id']] = {
+        isShowOriginPrice:false,
+        isOpenEdit:true,
+        isOpenEditV2:false,
+        isShowOriginPrice:false,
+        isRemark:false
+      }
 			this.templateLists = templateLists;
 			this.getCalculateTPrice();
 			this.handelProductView();
@@ -679,14 +722,23 @@ export default {
             customerAddress:this.postCustomer.address,
             templateName:this.postCustomer.houseType,
             customerId:this.postCustomer.id,
-            note:this.postCustomer.description
+            note:this.postCustomer.description,
+            productPrice:parseFloat(this.calculateTPrice),
+            finalProductPrice:parseFloat(this.discountPrice),
+            finalPrice:parseFloat(this.allPrice),
+            price:parseFloat(this.calculateTPrice) + parseFloat(this.servicePrice),
+            productSpecialPrice:parseFloat(this.calculateTPrice),
+            quoteCompanyName:this.postCustomer.design,
           };
           createPlan(data).then(response => {
-            var data = response.data
-            if (data.status > 0) {
-
+            if (response.status >0) {
+              console.log(1)
+              this.$router.push({path:"/transfer",query:{id:response.status}});
             } else {
-
+              this.$message({
+                type:"error",
+                message:"方案生成失败"
+              })
             }
           }).catch(err => {
             console.log(err)

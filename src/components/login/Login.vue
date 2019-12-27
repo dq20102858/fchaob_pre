@@ -2,7 +2,6 @@
 	<div id="login">
 		<div class="main">
 			<div class="login_box">
-        <!-- <img src="../../assets/imgs/logo-1.png" class="logo" /> -->
         <svg class="logo" aria-hidden="true"> <use xlink:href="#iconzu10"></use> </svg>
 				<el-form  :rules="loginRule"  :model="loginInfo" ref="login">
           <input type="type"  style="width: 0; height: 0; border: 0;"/>

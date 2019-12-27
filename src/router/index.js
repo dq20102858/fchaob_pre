@@ -55,8 +55,8 @@ export const asyncRoutes = [
 	   component: SysDetail
 	 },
    {
-	   path: '/transer',
-	   name: 'transer',
+	   path: '/transfer',
+	   name: 'transfer',
 	   component: Transfer
 	 },
 	 { path: '*', redirect: '/404', hidden: true }

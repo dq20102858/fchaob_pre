@@ -1,7 +1,9 @@
 <template>
 	<div id="design_wapper">
 	<el-container>
-		<el-header class="main_header">纳新科技</el-header>
+		<el-header class="main_header">
+      <i class="iconfont iconzu11"></i>
+    </el-header>
 		<el-main class="main_contain">
 			<el-main id="main_pic">
 				<img src="../../assets/imgs/banner.a8036ca.jpg" class="image">
@@ -54,7 +56,7 @@
 		},
 		methods:{
 			goProduct(id){
-				 this.$router.push({ name: 'designDetail' ,query:{id:id}});
+				 this.$router.push({ name: 'designDetail' ,query:{id:id,type:'system'}});
 			},
 			goDescribe(id){
 				let routerJump = this.$router.resolve({path:"/sysDetail",query:{id:id}});

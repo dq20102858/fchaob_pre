@@ -70,7 +70,9 @@
 			</div>
 		</el-drawer>
 		<el-container>
-			<el-header class="main_header">纳新科技</el-header>
+			<el-header class="main_header">
+        <i class="iconfont iconzu11"></i>
+      </el-header>
 			<el-main class="main_contain">
 				<h3>方案设计&nbsp;&nbsp;&nbsp;&nbsp;<span>{{nowView}}</span> </h3>
 				<div id="des_content">
@@ -370,6 +372,11 @@
 	}
   .el-popup-parent--hidden{
     padding: 0 !important;
+  }
+  #designDetail .el-button--primary{
+        background-color: #000000;
+        border-color: #000000;
+        color: #FCC98C;
   }
 </style>
 <style scoped>

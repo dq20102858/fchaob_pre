@@ -55,3 +55,11 @@ export function createPlan(data) {
     data
 	})
 }
+
+export function getPlanDetail(id) {
+	return request({
+		url: 'design/getPlanDetail',
+		method: 'get',
+    params:{ id }
+	})
+}
