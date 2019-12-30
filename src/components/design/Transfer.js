@@ -10,7 +10,18 @@ export default {
       detail:{},
       isShow:false,
       index:1,
-      productView:[]
+      productView:[],
+      downLoadPdfConf:[
+        {id:1,name:'方案报价'},
+        {id:2,name:'房间产品配置'},
+        {id:3,name:'方案描述'},
+      ],
+      downLoadXlsConf:[
+        {id:4,name:'方案报价'},
+        {id:5,name:'房间产品配置'}
+      ],
+      checkList:[1,2],
+      isDownLoad:false
     }
   },
   created: function() {
@@ -93,6 +104,15 @@ export default {
     	});
     	this.productView = list;
     },
+    openDownLoad(){
+      this.isDownLoad = !this.isDownLoad;
+    },
+    downLoadPdf(){
+      console.log(111)
+    },
+    downLoadXls(){
+      console.log(222)
+    }
   }
 
 }

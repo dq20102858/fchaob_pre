@@ -814,3 +814,49 @@
   .price_container .product_price .show p:last-child {
       margin-left: 100px;
   }
+  .download_list {
+      padding: 16px 16px 0;
+      background: #fff;
+      -webkit-box-shadow: 0 10px 20px 0 rgba(0,0,0,.1);
+      box-shadow: 0 10px 20px 0 rgba(0,0,0,.1);
+      border-radius: 2px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+  }
+.download_list .lxs_down,.download_list .pdf_down{
+      position: relative;
+      margin-bottom: 16px;
+      overflow: hidden;
+      padding-bottom: 32px;
+}
+.download_list .pdf_down div,
+.download_list .lxs_down div,
+.download_list .pdf_down ul,
+.download_list .lxs_down ul {
+    margin-right: 8px;
+    float: left;
+}
+.download_list .pdf_down li {
+    padding: 4px 0;
+}
+.download_list .dl_btn {
+    padding: 0 4px;
+    right: 0;
+    position: absolute;
+    margin: 0;
+    bottom: 0;
+    text-align: center;
+    display: block;
+    background: #4c89fb;
+    color: #fff !important;
+    border-radius: 2px;
+    font-size: 14px;
+    height: 24px;
+    line-height: 24px;
+}
+
+.check-box_pdf{
+  display: block;
+  padding: 3px;
+}
