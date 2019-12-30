@@ -605,25 +605,29 @@ export default {
 								productSn: "",
 								productSpecs: exchageProd['spec'],
 								productNum: item['productNum'],
-								totalPrice: item['productNum'] * exchageProd['marketPrice']
+								totalPrice: item['productNum'] * exchageProd['marketPrice'],
+                orginPrice: exchageProd['orginPrice'],
 							};
 							templateLists[index]['systems'][key]['prods'][k] = product;
 						}
 					})
 				})
 			});
-      this.openSwitch[exchageProd['id']] = {
+      let openSwitch = {
         isShowOriginPrice:false,
         isOpenEdit:true,
         isOpenEditV2:false,
         isShowOriginPrice:false,
-        isRemark:false
+        isRemark:false,
+        changePrice:false
       }
+      this.$set(this.openSwitch, exchageProd['id'],openSwitch);
 			this.templateLists = templateLists;
 			this.getCalculateTPrice();
 			this.handelProductView();
 			this.isExchage = false;
 			this.exchangeProd = [];
+      console.log(this.openSwitch)
 		},
 		//取消替换产品
 		cancelExchange() {
