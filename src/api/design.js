@@ -55,7 +55,13 @@ export function createPlan(data) {
     data
 	})
 }
-
+export function updatePlan(data) {
+	return request({
+		url: 'design/updatePlan',
+		method: 'post',
+    data
+	})
+}
 export function getPlanDetail(id) {
 	return request({
 		url: 'design/getPlanDetail',

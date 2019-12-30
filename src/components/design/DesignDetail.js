@@ -4,7 +4,8 @@ import {
 	getPageProduct4Select,
 	getCustomersPages,
   createPlan,
-  getPlanDetail
+  getPlanDetail,
+  updatePlan
 } from '@/api/design'
 export default {
 	name: 'designDetail',
@@ -627,7 +628,6 @@ export default {
 			this.handelProductView();
 			this.isExchage = false;
 			this.exchangeProd = [];
-      console.log(this.openSwitch)
 		},
 		//取消替换产品
 		cancelExchange() {
@@ -721,6 +721,7 @@ export default {
       this.$refs["ruleForm"].validate((valid) => {
       	if (valid) {
           let data = {
+            planId : this.planId,
             spaces:this.templateLists,
             templateId:this.id,
             fees:this.servicePriceLists,
@@ -737,19 +738,34 @@ export default {
             productSpecialPrice:parseFloat(this.calculateTPrice),
             quoteCompanyName:this.postCustomer.design,
           };
-          createPlan(data).then(response => {
-            if (response.status >0) {
-              console.log(1)
-              this.$router.push({path:"/transfer",query:{id:response.status}});
-            } else {
-              this.$message({
-                type:"error",
-                message:"方案生成失败"
-              })
-            }
-          }).catch(err => {
-            console.log(err)
-          })
+          if(this.type=="system"){
+            createPlan(data).then(response => {
+              if (response.status >0) {
+                this.$router.push({path:"/transfer",query:{id:response.status}});
+              } else {
+                this.$message({
+                  type:"error",
+                  message:"方案生成失败"
+                })
+              }
+            }).catch(err => {
+              console.log(err)
+            })
+          }else{
+            updatePlan(data).then(response => {
+              if (response.status >0) {
+                this.$router.push({path:"/transfer",query:{id:response.status}});
+              } else {
+                this.$message({
+                  type:"error",
+                  message:"方案生成失败"
+                })
+              }
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+
         }
       })
     }
