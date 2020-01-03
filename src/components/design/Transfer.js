@@ -1,5 +1,6 @@
 import {
-  getPlanDetail
+  getPlanDetail,
+  downLoad
 } from '@/api/design'
 
 export default {
@@ -108,10 +109,24 @@ export default {
       this.isDownLoad = !this.isDownLoad;
     },
     downLoadPdf(){
-      console.log(111)
+      if(this.checkList.indexOf(1)===-1&& this.checkList.indexOf(2)===-1 && this.checkList.indexOf(3)===-1){
+          this.$message({
+              type:"warning",
+              message:"未选择任何pdf文件,请选择后再下载",
+          })
+          return false;
+       }
+       window.location.href="http://fchaob.nething.com/design/exportPdf?planId="+this.planId+"&checkLists="+this.checkList;
     },
     downLoadXls(){
-      console.log(222)
+     if(this.checkList.indexOf(4)===-1&& this.checkList.indexOf(5)===-1){
+        this.$message({
+            type:"warning",
+            message:"未选择任何excel文件,请选择后再下载",
+        })
+        return false;
+     }
+     window.location.href="http://fchaob.nething.com/design/exportXls?planId="+this.planId+"&checkLists="+this.checkList;
     }
   }
 
