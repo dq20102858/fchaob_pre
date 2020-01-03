@@ -188,7 +188,7 @@ export default {
 	}
 	#register-header{
 		width: 100%;
-		height: 200px;
+		height: 120px;
 	}
 	#register-form{
 		width: 500px;

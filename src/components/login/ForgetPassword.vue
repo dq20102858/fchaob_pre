@@ -182,12 +182,12 @@ export default {
 		background: #f5f6f6;
 	}
   #forget-header {
-    height: 230px;
+    height: 120px;
   }
 	#forget-main .step{
-		width: 984px;
+		width: 1000px;
 		background: #ffffff;
-		height: 500px;
+		height: 540px;
 		margin: 0 auto;
 		padding: 50px 90px;
 		box-sizing: border-box
@@ -205,7 +205,7 @@ export default {
 	}
 	#forgetForm {
 		width: 480px;
-		margin: 80px auto
+		margin: 45px auto
 	}
 	#forgetForm  .el-form-item .el-form-item__content{
 		margin-left: 80px !important;
@@ -242,12 +242,17 @@ export default {
   #forgetForm .step4-left{
     text-align: center;
     font-size: 35px;
-    color: #903030;
+    color: #FCC98C;
     display: block;
   }
   #forgetForm  .step4-right{
     display: block;
     color: #4C89FB;
     float: right;
+  }
+  #forgetForm .el-button--primary{
+    color: #000 !important;
+    background-color: #FCC98C!important;
+    border-color: #FCC98C!important;
   }
 </style>

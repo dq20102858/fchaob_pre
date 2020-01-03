@@ -104,13 +104,13 @@
     background-color: #fff;
     color: #333;
     text-align: center;
-    line-height: 96px;
-    height: 96px !important;
+    line-height: 60px;
+    height: 60px !important;
     padding: 0;
   }
   #home .logo_1{
-    width: 160px;
-    height: 50px;
+    width: 130px;
+    height: 40px;
     margin-top: 26px;
   }
   #header_left {
@@ -140,7 +140,7 @@
     position: relative;
   }
   #home .el-aside {
-    height: calc(100vh - 96px);
+    height: calc(100vh - 60px);
   }
 
   #home .el-main {
@@ -160,7 +160,7 @@
   #home .main_menu_title {
     display: inline-block;
     margin-left: 13px;
-    font-size: 20px;
+    font-size: 16px;
 
   }
 
@@ -188,7 +188,7 @@
   #home .iconzu16{
     position: absolute;
     left: 21px;
-    top: 12px;
+    top: 20px;
   }
   #home .iconzu12,.iconzu15,.iconzu14,.iconzu13,.iconzu16{
     font-size: 20px;
@@ -207,7 +207,7 @@
   }
   .company .el-icon--right{
     position: absolute;
-    top: 36px;
+    top: 20px;
   }
   .iconzu14{
     right: 339px;
@@ -238,7 +238,7 @@
   }
 
   #home .el-submenu .el-menu-item {
-    font-size: 16px;
+    font-size: 14px;
     padding: 0 !important;
     margin-left: 57px;
   }
@@ -264,7 +264,7 @@
 
   #home .main_div {
     width: 100%;
-    height: calc(100vh - 226px);
+    height: calc(100vh - 140px);
     position: relative;
 
   }
@@ -280,12 +280,12 @@
   #home .sub-header{
     margin: 0;
     padding: 0;
-    height: 82px !important;
+    height: 70px !important;
     background: #FFFFFF;
-    line-height: 82px;
+    line-height: 70px;
   }
   #home .sub-breadcrumb{
     margin-left: 28px;
-    font-size: 28px;
+    font-size: 20px;
   }
 </style>

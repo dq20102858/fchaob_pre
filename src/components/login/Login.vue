@@ -3,7 +3,7 @@
 		<div class="main">
 			<div class="login_box">
         <svg class="logo" aria-hidden="true"> <use xlink:href="#iconzu10"></use> </svg>
-				<el-form  :rules="loginRule"  :model="loginInfo" ref="login">
+				<el-form  :rules="loginRule"  :model="loginInfo" ref="login" class="login-form">
           <input type="type"  style="width: 0; height: 0; border: 0;"/>
           <input type="password" style="width: 0; height: 0; border: 0;"/>
           <el-form-item  prop="phoneOrEmail">
@@ -92,17 +92,20 @@
 		background-repeat:no-repeat;
 		background-size:100%;
 	}
+  .login-form{
+    margin-top: -10px !important;
+  }
 	#login .login_box .el-button{
 		width: 100%;
-    height: 60px;
-    line-height: 60px;
+    height: 40px;
+    line-height: 40px;
     background: rgba(252,201,140,1);
     outline: none;
     border: none;
-    margin-top: 30px;
+    margin-top: 10px;
 	}
   #login .login_box .el-button span{
-  	font-size: 37px;
+  	font-size: 25px;
     color: #000000;
   }
 	#login .login_box .el-form-item{
@@ -116,20 +119,20 @@
   border:none;
   border-bottom:3px #a9a490  dotted;
   outline: none;
-  height: 60px;
+  height: 40px;
   border-radius:0;
   padding-left: 70px;
   color: #ffffff;
   font-size: 16px;
 }
 #login .iconfont{
-  font-size: 50px;
+  font-size: 35px;
   color: rgba(252,201,140,1);
 }
 #login input::-webkit-input-placeholder {
   width:132px;
   height:33px;
-  font-size:24px;
+  font-size:16px;
   font-family:PingFang SC;
   font-weight:400;
   line-height:33px;

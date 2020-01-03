@@ -14,16 +14,17 @@ input:focus{border:none;outline:none}
 	width: 100%;
 }
 #login .main .login_box{
-	width: 800px;
+	width: 560px;
 	background-color: #000000;
 	box-sizing: border-box;
-	padding: 0 90px;
+	padding: 0 70px;
 	text-align: center;
-  height: 600px;
+  height: 400px;
   margin: 0 auto;
 }
 #login .main .login_box .logo{
-    margin: 20px auto 0;
+    margin: -20px auto ;
+    width: 200px;
 }
 #login .main .login_box h3{
 	font-size: 16px;
@@ -34,8 +35,8 @@ input:focus{border:none;outline:none}
 }
 #login .main .login_box .line{
 	display: block;
-	font-size: 14px;
-  margin-top: 10px;
+	font-size: 10px;
+  /* margin-top: 10px; */
 }
 .forgetPassword{
 	color:#FFFFFF;
