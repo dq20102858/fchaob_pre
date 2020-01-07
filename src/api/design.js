@@ -69,3 +69,10 @@ export function getPlanDetail(id) {
     params:{ id }
 	})
 }
+export function getSysDetail(id) {
+	return request({
+		url: 'design/getSysDetail',
+		method: 'get',
+    params:{ id }
+	})
+}

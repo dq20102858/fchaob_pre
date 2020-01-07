@@ -98,7 +98,7 @@
 	#login .login_box .el-button{
 		width: 100%;
     height: 40px;
-    line-height: 40px;
+    line-height: 17px;
     background: rgba(252,201,140,1);
     outline: none;
     border: none;
