@@ -65,7 +65,6 @@ export default {
 			selectKeywords: "",
 			spaces: [], //产品空间
 			selectedAddSpace: [], //选择的产品空间
-			curSysName: "", //当前选择的系统名称
 			i: 0,
 			canLoad: true, //分页是否可以继续请求加载
 			productView: [], //产品视图
@@ -138,7 +137,6 @@ export default {
 				var data = response.data
 				if (data) {
 					this.productLists = data;
-					this.curSysName = this.productLists[0]['name'];
 				}
 			}).catch(err => {
 				console.log(err)
@@ -425,7 +423,6 @@ export default {
 		selecCate(item, key) {
 			this.cateId = item['id'];
 			this.index = key;
-			this.curSysName = item['name']
 			this.selectPage = 1;
 			this.selectedLists = [];
 			this.getPageProduct4Select();
@@ -476,9 +473,7 @@ export default {
 			let systemId = prod['topCatalogId'];
 			let proId = prod['id'];
 			let selectSpace = this.selectedAddSpace;
-			let curSysName = this.curSysName;
-      console.log(curSysName)
-
+			let curSysName = prod['topCateName'];
 			this.templateLists.forEach(function(systems, index) {
 				var indexof = selectSpace.indexOf(systems['spaceName']);
 				if (indexof != '-1') {
