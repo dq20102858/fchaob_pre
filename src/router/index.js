@@ -8,6 +8,7 @@ import Register from '@/components/login/Register.vue'
 import ForgetPassword from '@/components/login/ForgetPassword.vue'
 import SysDetail from '@/components/design/SysDetail.vue'
 import Transfer from '@/components/design/Transfer.vue'
+import Test from '@/components/test.vue'
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export const constantRoutes = [
    path: '/forgetPassword',
    name: 'forgetPassword',
    component: ForgetPassword
+ },
+ {
+   path: '/test',
+   name: 'test',
+   component: Test
  },
 ]
 

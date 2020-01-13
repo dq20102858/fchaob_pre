@@ -448,6 +448,15 @@ export default {
 					selectedAdd.push(item['name']);
 				}
 			});
+      let openSwitch = {
+        isShowOriginPrice:false,
+        isOpenEdit:true,
+        isOpenEditV2:false,
+        isShowOriginPrice:false,
+        isRemark:false,
+        changePrice:false
+      }
+      this.openSwitch[prod['id']] = openSwitch
 			this.selectedAddSpace = selectedAdd; //在所选空间里面新增产品
 			this.addProd2Template(prod);
 			this.closeSpace(key);
@@ -468,6 +477,7 @@ export default {
 			let proId = prod['id'];
 			let selectSpace = this.selectedAddSpace;
 			let curSysName = this.curSysName;
+      console.log(curSysName)
 
 			this.templateLists.forEach(function(systems, index) {
 				var indexof = selectSpace.indexOf(systems['spaceName']);
